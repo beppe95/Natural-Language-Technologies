@@ -34,7 +34,7 @@ ADP  -> 'di' | 'da'
 ADJ  -> 'novecento' | 'veloce' | 'nebuloso' | 'molto'
 """)
 
-sent = sentences[0].split()
+sent = sentences[2].split()
 parser = nltk.ChartParser(test_grammar)
 
 for tree in parser.parse(sent):
