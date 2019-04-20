@@ -10,9 +10,9 @@ class Node:
 
 # Print the Tree
     def PrintTree(self):
+        print(self.data)
         if self.left:
             self.left.PrintTree()
-        print( self.data),
         if self.right:
             self.right.PrintTree()
 
