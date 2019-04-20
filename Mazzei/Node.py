@@ -9,25 +9,27 @@ class Node:
         return hash(self.data)
 
 # Print the Tree
-    def PrintTree(self):
+    def print_tree(self):
         print(self.data)
         if self.left:
-            self.left.PrintTree()
+            self.left.print_tree()
         if self.right:
-            self.right.PrintTree()
+            self.right.print_tree()
 
-# Postorder traversal
+    def get_list_tree(self, res):
+        res.append(self)
+        if self.left:
+            self.left.get_list_tree(res)
+        if self.right:
+            self.right.get_list_tree(res)
+        return res
+
+# Post-order traversal
 # Left ->Right -> Root
-    def PostorderTraversal(self, root):
+    def post_order_traversal(self, root):
         res = []
         if root:
-            res = self.PostorderTraversal(root.right)
-            res = res + self.PostorderTraversal(root.left)
+            res = self.post_order_traversal(root.right)
+            res = res + self.post_order_traversal(root.left)
             res.append(root.data)
         return res
-'''
-right1 = Node("A", None, None)
-left = Node("NP", None, None)
-right = Node("VP", None, right1)
-root = Node("S", left, right)
-print(root.PostorderTraversal(root))'''

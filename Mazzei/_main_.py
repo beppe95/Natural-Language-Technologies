@@ -8,45 +8,40 @@ def main():
     grammar_folder = Path.cwd() / "Grammar"
     grammar_file = grammar_folder / "YodaCFG.cfg"
 
-    sentences = ["Noi siamo illuminati",
-                 "Tu hai amici lì",
-                 "Tu avrai novecento anni di età",
-                 "Skywalker corre veloce",
-                 "Il futuro di questo ragazzo è nebuloso",
-                 "Tu hai molto da apprendere ancora",
+    sentences = ["Tu avrai novecento anni di età",      #Novecento anni di età tu avrai
+                 "Tu hai amici lì",                     #Amici hai tu lì
+                 "Noi siamo illuminati",                #Illuminati noi siamo
+                 "Tu hai molto da apprendere ancora",   #Molto da apprendere ancora tu hai
+                 "Skywalker corre veloce",              #Veloce Skywalker corre
+                 "Skywalker sarà tuo apprendista",      #Tuo apprendista Skywalker sarà
+                 "Il lato oscuro è arduo da vedere",    #Arduo da vedere il lato oscuro è
                  "Frase volutamente non supportata dalla grammatica"]
 
     with open(grammar_file, encoding='utf-8') as file:
         grammar = CFG.fromstring(file.read())
 
-    cky(sentences[1].split(), grammar)
-    '''root = cky(sentences[0].split(), grammar)
-    Node.Node.PrintTree(root)'''
+    root = cky(sentences[6].split(), grammar)
+    Node.Node.print_tree(root)
 
 
 def cky(words: list, grammar: CFG):
     table_dimension = len(words) + 1
-    table = numpy.ndarray(shape=(table_dimension, table_dimension), dtype=set)
+    table = numpy.ndarray(shape=(table_dimension, table_dimension), dtype=list)
 
     for j in range(1, table_dimension):
-        table[j - 1, j] = set()
-        table[j - 1, j].add(Node.Node(find_head_lr(words[j - 1], grammar), None, None))
-
+        table[j - 1, j] = list()
+        table[j - 1, j].append(Node.Node(find_head_lr(words[j - 1], grammar), None, None))
         for i in reversed(range(0, j - 1)):
-            table[i, j] = set()
+            table[i, j] = list()
             for k in range(i + 1, j):
                 if table[i, k] is not None and table[k, j] is not None:
-                    table[i, j].add(Node.Node(find_head_gr(list(table[i, k])[0], list(table[k, j])[0], grammar),
-                                              list(table[i, k])[0], list(table[k, j])[0]))
+                    table[i, j].append(Node.Node(find_head_gr(list(table[i, k])[0], list(table[k, j])[0], grammar),
+                                                 list(table[i, k])[0], list(table[k, j])[0]))
 
-    for elem in table[0, table_dimension-1]:
-        print(elem.data)
+    cky_res = [x for x in list(table[0, table_dimension-1]) if str(x.data) == "S"]
+    if cky_res:
+        return cky_res[0]
 
-
-    '''finallist = [x for x in list(table[0, table_dimension-1]) if str(x.data) == "S"]
-    if finallist:
-        print(finallist)
-    return finallist[0]'''
 
 def find_head_lr(word: str, grammar: CFG):
     lexical_rules = list((prod for prod in grammar.productions()
