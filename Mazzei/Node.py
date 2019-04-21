@@ -10,6 +10,7 @@ class Node:
 
 # Print the Tree
     def print_tree(self):
+
         print(self.data)
         if self.left:
             self.left.print_tree()
