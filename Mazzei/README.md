@@ -1,6 +1,6 @@
 # Natural-Language-Tecnologies <br> - Basic Italian-Yoda translator
 
-![image](https://it.wikipedia.org/wiki/File:Star_Wars_Logo.svg)
+![image](http://www.logospng.com/images/113/star-wars-logo-wallpapers-wallpaper-cave-113223.png)
 
 
 
