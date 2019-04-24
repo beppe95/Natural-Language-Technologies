@@ -1,7 +1,6 @@
-# Natural-Language-Tecnologies <br> - Basic Italian-Yoda translator
+# Natural-Language-Tecnologies - Basic Italian-Yoda translator
 
-![image](https://banner2.kisspng.com/20180324/ypq/kisspng-yoda-star-wars-logo-clip-art-star-wars-5ab60e29681db1.0648850415218806174265.jpg)
-
+![image](https://i.dlpng.com/static/png/173636_thumb.png)
 
 
 <table class="tg" align="right">
