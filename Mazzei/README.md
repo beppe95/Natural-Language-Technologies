@@ -12,8 +12,8 @@
   
   <tr>
     <th class="tg-0pky"> <b>URLs:</b> </th>
-    <th class="tg-0pky"> - <a href="https://github.com/beppe95">https://github.com/beppe95</a> <br>
-                         - <a href="https://github.com/giacomocostarelli">https://github.com/giacomocostarelli</a></th>
+    <th class="tg-0pky"> - <a href="https://github.com/giacomocostarelli">https://github.com/giacomocostarelli</a></th>
+    <th class="tg-0pky"> - <a href="https://github.com/beppe95">https://github.com/beppe95</a></th>
   </tr>
   
 </table> 
