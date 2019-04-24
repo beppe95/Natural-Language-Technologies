@@ -9,19 +9,112 @@ The project consists in the implementation of a **basic IT → IT-YO transfer tr
 
 The set of **sentences**, and their **respective translations**, we have chosen is the following one:
 
-| Input  | Yoda translation |
-| ------------- | ------------- |
-| **Tu avrai novecento anni di età**  | **Novecento anni di età tu avrai** |
-| **Tu hai amici lì** | **Amici hai tu lì** |
-| **Noi siamo illuminati** | **Illuminati noi siamo** |
-| **Tu hai molto da apprendere ancora** | **Molto da apprendere ancora tu hai** |
-| **Skywalker corre veloce** | **Veloce Skywalker corre** |
-| **Skywalker sarà tuo apprendista** | **Tuo apprendista Skywalker sarà** |
+|               Input               |          Yoda Translation         |
+|:---------------------------------:|:---------------------------------:|
+|   Tu avrai novecento anni di età  |   Novecento anni di età tu avrai  |
+|          Tu hai amici lì          |          Amici hai tu lì          |
+|        Noi siamo illuminati       |        Illuminati noi siamo       |
+| Tu hai molto da apprendere ancora | Molto da apprendere ancora tu hai |
+|       Skywalker corre veloce      |       Veloce Skywalker corre      |
+|   Skywalker sarà tuo apprendista  |   Tuo apprendista Skywalker sarà  |
 
 ## Yoda's speech patterns
+Master Jedi Yoda is one of the most iconic character of the Star Wars franchise created by George Lucas.
 
+He's particularly known because of his bizarre linguistic schemes which have been the subject of discussion among linguists. These schemes have been associated with an **Object–Subject–Verb** (**OSV**) order.
+
+This last scheme, generally referred as **XSV** order, is different by the **Subject–Object–Verb** (**OSV**) order we are accustomed to because it puts any complement before the subject and the verb of the sentence.
+
+An example using an english sentence with an **OSV** order:
+> You must seek advice!
+
+An example using the same english sentence but with an **XSV** order:
+> Seek advice, you must! 
 
 # Project management
+
+<pre lang=python>
+def find_head_lr(word: str, grammar: CFG):
+    """
+    Finds the LHS of a lexical rule contained in the input CFG grammar.
+    :param word: the RHS of a lexical rule
+    :param grammar: input CFG grammar
+    :return: the LHS of a lexical rule, if it exists
+    """
+    lexical_rules = list((prod for prod in grammar.productions()
+                         if len(prod.rhs()) == 1 and prod.rhs()[0] == word))
+    if lexical_rules:
+        return lexical_rules[0].lhs()
+</pre>
+
+<pre lang=python>
+def find_head_gr(first: Nonterminal, second: Nonterminal, grammar: CFG):
+    """
+    Finds the LHS of a grammar rule contained in the input CFG grammar.
+    :param first: first half of the grammar rule's RHS
+    :param second: latter half of the grammar rule's RHS
+    :param grammar: input CFG grammar
+    :return: the LHS of a grammar rule, if it exists
+    """
+    grammar_rules = list((prod for prod in grammar.productions()
+                          if len(prod.rhs()) == 2
+                          and first.label() == prod.rhs()[0] and second.label() == prod.rhs()[1]))
+
+    if grammar_rules:
+        return grammar_rules[0].lhs()
+</pre>
+
+<pre lang=python>
+def cky(words: list, grammar: CFG):
+    """
+    The Cocke Kasami Younger Algorithm (CKY) is an efficient parsing algorithm for Context-Free grammars.
+    The structure of the rules must be in Chomsky Normal Form. CNF rules' right hand side can contain:
+        1 - at most 2 symbols;
+        2 - a terminal;
+        3 - a null string identified by ε
+    Given a sentence, the algorithm builds up, via dynamic programming, a syntactic tree consistent with the CFG input
+    grammar.
+    :param words: sentence split into words
+    :param grammar: CFG grammar
+    :return: syntactic tree, instance of nltk Tree.
+    """
+    table_dimension = len(words) + 1
+    table = numpy.ndarray(shape=(table_dimension, table_dimension), dtype=list)
+
+    for j in range(1, table_dimension):
+        table[j - 1, j] = list()
+        table[j - 1, j].append(Tree(utils.find_head_lr(words[j - 1], grammar), [words[j - 1]]))
+        for i in reversed(range(0, j - 1)):
+            table[i, j] = list()
+            for k in range(i + 1, j):
+                if table[i, k] is not None and table[k, j] is not None:
+                    table[i, j].append(Tree(utils.find_head_gr(list(table[i, k])[0], list(table[k, j])[0], grammar),
+                                            [list(table[i, k])[0], list(table[k, j])[0]]))
+
+    return table[0, table_dimension - 1][0] if table[0, table_dimension - 1][0] \
+        else Exception("Sentence not supported by written grammar!")
+</pre>
+
+<pre lang=python>
+def yoda_translation(root: Tree, translation_rules: list):
+    """
+    Provides translation from italian language to Yoda-speak language.
+    It filters out from nltk tree's indices of the subtree whose label is contained in 'translation_rules'.
+    Then, it sets the previously obtained subtree as the new left child of a new syntactic tree.
+    :param root: the syntactic tree to be translated
+    :param translation_rules: list of Nonterminal object used to provide translation from italian to Yoda-speak language
+    """
+
+    to_be_moved = list((index for index in root.treepositions()
+                        if isinstance(root[index], Tree) and root[index].label() in translation_rules))[0]
+
+    if to_be_moved:
+        prefix = root.__getitem__(to_be_moved)
+        root.__setitem__(to_be_moved, Tree("ε", []))
+        root = Tree('Yoda Translation', [prefix, root])
+
+    root.draw()
+ </pre>
 
 # Results
 
