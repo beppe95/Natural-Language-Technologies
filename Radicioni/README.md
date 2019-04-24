@@ -1,4 +1,4 @@
-# Natural-Language-Tecnologies <br> - Basic Italian-Yoda translator
+# Natural-Language-Tecnologies <br> 
 
 <table class="tg" align="right">
   <tr>
