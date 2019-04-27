@@ -31,38 +31,59 @@ An example using an english sentence with an **OSV** order:
 An example using the same english sentence but with an **XSV** order:
 > Seek advice, you must! 
 
+## Ideas
+The idea we had to write the sentences module translation was born by seeking recurrent patterns within the sentences and their respective translation.
+
+In accordance with our thoughts, **XSV** order expose a form of empirical translation rule. 
+In fact, for most of the analyzed sentences, we only need to move any complement to the beginning of the sentence to be translated to complete the translation task.
+
+Therefore, the simplest idea to make the translation possible was to create a **set of translation rules** designed to identify those parts of speech to be moved within sentences to achieve our goal.
+
+# Requirements
+1. Writing down a generic **Context-Free Grammar**, and its respective conversion to Chomsky Normal Form, able to correctly express the chosen sentences
+
+2. Implementation of the **Cocke–Kasami-Younger** (alternatively called **CKY**, or **CYK**) algorithm*
+
+3. **Manipulation** of the previous phase's output in order to obtain the **input translation**
+
+
 # Project management
 
-<pre lang=python>
-def find_head_lr(word: str, grammar: CFG):
-    """
-    Finds the LHS of a lexical rule contained in the input CFG grammar.
-    :param word: the RHS of a lexical rule
-    :param grammar: input CFG grammar
-    :return: the LHS of a lexical rule, if it exists
-    """
-    lexical_rules = list((prod for prod in grammar.productions()
-                         if len(prod.rhs()) == 1 and prod.rhs()[0] == word))
-    if lexical_rules:
-        return lexical_rules[0].lhs()
-</pre>
+## Grammar
+Context-Free Grammar we proposed inside *YodaCFG.cfg* file covers a wide type of **syntactic units** including:
+- *Noun phrase* (**NP**)
+- *Verbal phrase* (**VP**)
+- *Propositional phrase* (**PP**)
+- *Adjective phrase* (**ADJP**)
+- *Adverbial phrase* (**ADVP**)
 
-<pre lang=python>
-def find_head_gr(first: Nonterminal, second: Nonterminal, grammar: CFG):
-    """
-    Finds the LHS of a grammar rule contained in the input CFG grammar.
-    :param first: first half of the grammar rule's RHS
-    :param second: latter half of the grammar rule's RHS
-    :param grammar: input CFG grammar
-    :return: the LHS of a grammar rule, if it exists
-    """
-    grammar_rules = list((prod for prod in grammar.productions()
-                          if len(prod.rhs()) == 2
-                          and first.label() == prod.rhs()[0] and second.label() == prod.rhs()[1]))
+Inside the file, you can also found the following **POS**:
+- *Common nouns* (**NOUN**)
+- *Proper nouns and Personal pronouns* (**NP**)
+- *Auxiliary verbs* (**AUX**)
+- ** (**VBN**)
+- ** (**VERB**)
+- *Determiners* (**DET**)
+- *Adverbs* (**ADV**)
+- *Pronouns, excluding personal pronouns* (**PRON**)
+- *Adpositions* (**ADP**)
+- *Adjectives* (**ADJ**)
 
-    if grammar_rules:
-        return grammar_rules[0].lhs()
-</pre>
+## Used libraries
+Along the project's development, we used **nltk** and **numpy**, two of the most used Python libraries.
+
+**nltk** library was used to **create the Context-Free Grammar** from *YodaCFG.cfg* file and to provide the **Tree data structure** to perform CKY algorithm and to **visualize** parsing and translation outputs.
+
+**numpy** library was used to create the matrix, essential data structure to perform CKY algorithm, using the built-ins `numpy.ndarray` type.
+
+## Modules
+We choose to split the project into four modules:
+1. `main`
+2. `cky`
+3. `translate`
+4. `utils`
+
+### `cky` module
 
 <pre lang=python>
 def cky(words: list, grammar: CFG):
@@ -95,6 +116,9 @@ def cky(words: list, grammar: CFG):
         else Exception("Sentence not supported by written grammar!")
 </pre>
 
+
+### `translate` module
+
 <pre lang=python>
 def yoda_translation(root: Tree, translation_rules: list):
     """
@@ -116,8 +140,43 @@ def yoda_translation(root: Tree, translation_rules: list):
     root.draw()
  </pre>
 
+### `utils` module
+
+<pre lang=python>
+def find_head_lr(word: str, grammar: CFG):
+    """
+    Finds the LHS of a lexical rule contained in the input CFG grammar.
+    :param word: the RHS of a lexical rule
+    :param grammar: input CFG grammar
+    :return: the LHS of a lexical rule, if it exists
+    """
+    lexical_rules = list((prod for prod in grammar.productions()
+                         if len(prod.rhs()) == 1 and prod.rhs()[0] == word))
+    if lexical_rules:
+        return lexical_rules[0].lhs()
+</pre>
+
+<pre lang=python>
+def find_head_gr(first: Nonterminal, second: Nonterminal, grammar: CFG):
+    """
+    Finds the LHS of a grammar rule contained in the input CFG grammar.
+    :param first: first half of the grammar rule's RHS
+    :param second: latter half of the grammar rule's RHS
+    :param grammar: input CFG grammar
+    :return: the LHS of a grammar rule, if it exists
+    """
+    grammar_rules = list((prod for prod in grammar.productions()
+                          if len(prod.rhs()) == 2
+                          and first.label() == prod.rhs()[0] and second.label() == prod.rhs()[1]))
+
+    if grammar_rules:
+        return grammar_rules[0].lhs()
+</pre>
+
+
 # Results
 
+## Exceptions
 
 *"May the Force be with you"*.
 
