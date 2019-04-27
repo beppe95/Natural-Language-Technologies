@@ -7,4 +7,4 @@ There are three main components:
 - the second one is mostly focussed on Lexical Semantics; several approaches for Knowledge Representation will be introduced herein, along with the notion of semantics based on conceptual anchoring. Also a detailed survey on the existing, state-of-the-art, semantic resources will be provided,
 - the third one is oriented to statistical approaches to NLP, starting from the concept of distributional semantics and the existing methodologies. Then it will focus on the notion of semantic similarity and the theoretical bases for the construction of meaning through syntactic-semantic compositions, with an emphasis on the automatic construction of ontologies 
 
-For any details, visit (http://magistrale.educ.di.unito.it/index.php/offerta-formativa/insegnamenti/elenco-completo/elenco-completo/scheda-insegnamento?cod=INF0094&year=2018)
+For all details, check (http://magistrale.educ.di.unito.it/index.php/offerta-formativa/insegnamenti/elenco-completo/elenco-completo/scheda-insegnamento?cod=INF0094&year=2018)
