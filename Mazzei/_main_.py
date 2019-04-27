@@ -1,6 +1,5 @@
 from pathlib import Path
-from nltk import CFG
-from nltk import Nonterminal
+from nltk import CFG, Nonterminal
 import Mazzei.cky as cky_algorithm
 import Mazzei.translate as translate
 
@@ -21,6 +20,7 @@ def main():
 
     with open(grammar_file, encoding='utf-8') as file:
         grammar = CFG.fromstring(file.read())
+    file.close()
 
     for sent in sentences:
         syntactic_tree = cky_algorithm.cky(sent.split(), grammar)
