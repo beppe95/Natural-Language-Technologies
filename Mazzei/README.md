@@ -12,14 +12,6 @@ The project consists in the implementation of a **basic IT → IT-YO transfer tr
 Even if exist other algorithm with better average running time complexity, CKY is the only one that has a worst case running time complexity of ![equation](http://latex.codecogs.com/gif.latex?O%28n%5E3%5Ccdot%20%7CG%7C%29) where ![equation](http://latex.codecogs.com/gif.latex?n) is the *length* of the parsed string and ![equation](http://latex.codecogs.com/gif.latex?%7CG%7C) is the size of the CNF grammar ![equation](http://latex.codecogs.com/gif.latex?G).
 
 
-
-
-
-
-
-
-
-
 The set of **sentences**, and their **respective translations**, we have chosen is the following one:
 
 |               Input               |          Yoda Translation         |
@@ -90,16 +82,21 @@ Along the project's development, we used **nltk** and **numpy**, two of the most
 **numpy** library was used to create the essential data structure to perform CKY algorithm using the built-ins `numpy.ndarray` type.
 
 ## Modules
-We choose to split the project into four modules:
-1. `main`
-2. `cky`
-3. `translate`
-4. `utils`
+We choose to split the project into **four modules**:
+* `main` which initializes:
+  * **filesystem path** to make the *YodaCFG.cfg* file available
+  * a list containing the **input sentences**, named `sentences`
+  * a list of **Nonterminal objects** used to make the translation task, named `translation_rules`
 
-### `cky` module
+* `cky` which contains the CKY algorithm implementation
+* `translate`which contains the translation implementation
+* `utils` which contains some utils used inside CKY algorithm implementation
+
+
+### `cky` module description
 
 <pre lang=python>
-def cky(words: list, grammar: CFG):
+def cky(words: list, grammar: CFG) -> Tree:
     """
     The Cocke Kasami Younger Algorithm (CKY) is an efficient parsing algorithm for Context-Free grammars.
     The structure of the rules must be in Chomsky Normal Form. CNF rules' right hand side can contain:
@@ -117,12 +114,13 @@ def cky(words: list, grammar: CFG):
 
     for j in range(1, table_dimension):
         table[j - 1, j] = list()
-        table[j - 1, j].append(Tree(utils.find_head_lr(words[j - 1], grammar), [words[j - 1]]))
+        table[j - 1, j].append(Tree(utils.find_lhs_lexical_rule(words[j - 1], grammar), [words[j - 1]]))
         for i in reversed(range(0, j - 1)):
             table[i, j] = list()
             for k in range(i + 1, j):
                 if table[i, k] is not None and table[k, j] is not None:
-                    table[i, j].append(Tree(utils.find_head_gr(list(table[i, k])[0], list(table[k, j])[0], grammar),
+                    table[i, j].append(Tree(utils.find_lhs_grammar_rule(list(table[i, k])[0],
+                                                                        list(table[k, j])[0], grammar),
                                             [list(table[i, k])[0], list(table[k, j])[0]]))
 
     return table[0, table_dimension - 1][0] if table[0, table_dimension - 1][0] \
@@ -130,7 +128,7 @@ def cky(words: list, grammar: CFG):
 </pre>
 
 
-### `translate` module
+### `translate` module description
 
 <pre lang=python>
 def yoda_translation(root: Tree, translation_rules: list):
@@ -153,10 +151,10 @@ def yoda_translation(root: Tree, translation_rules: list):
     root.draw()
  </pre>
 
-### `utils` module
+### `utils` module description
 
 <pre lang=python>
-def find_head_lr(word: str, grammar: CFG):
+def find_lhs_lexical_rule(word: str, grammar: CFG) -> Nonterminal:
     """
     Finds the LHS of a lexical rule contained in the input CFG grammar.
     :param word: the RHS of a lexical rule
@@ -170,7 +168,7 @@ def find_head_lr(word: str, grammar: CFG):
 </pre>
 
 <pre lang=python>
-def find_head_gr(first: Nonterminal, second: Nonterminal, grammar: CFG):
+def find_lhs_grammar_rule(first: Nonterminal, second: Nonterminal, grammar: CFG) -> Nonterminal:
     """
     Finds the LHS of a grammar rule contained in the input CFG grammar.
     :param first: first half of the grammar rule's RHS
