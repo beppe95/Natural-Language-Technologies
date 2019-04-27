@@ -1,4 +1,5 @@
-# Natural-Language-Tecnologies - Basic Italian-Yoda transfer translator
+# Natural-Language-Tecnologies
+# Basic Italian-Yoda transfer translator
 
 <p align="center">
   <img src="https://i.dlpng.com/static/png/173636_thumb.png"/>
@@ -6,6 +7,18 @@
 
 # Project Description
 The project consists in the implementation of a **basic IT → IT-YO transfer translator** which takes an italian sentence, as input, and provides its traslation into Jedi Master Yoda's speech from Star Wars.
+
+**Parsing algorithm** we need to use and to implement is **Cocke–Kasami-Younger** (alternatively called **CKY**, or **CYK**) algorithm for context-free grammars which is based on bottom-up parsing and dynamic programming.
+Even if exist other algorithm with better average running time complexity, CKY is the only one that has a worst case running time complexity of ![equation](http://latex.codecogs.com/gif.latex?O%28n%5E3%5Ccdot%20%7CG%7C%29) where ![equation](http://latex.codecogs.com/gif.latex?n) is the *length* of the parsed string and ![equation](http://latex.codecogs.com/gif.latex?%7CG%7C) is the size of the CNF grammar ![equation](http://latex.codecogs.com/gif.latex?G).
+
+
+
+
+
+
+
+
+
 
 The set of **sentences**, and their **respective translations**, we have chosen is the following one:
 
@@ -37,12 +50,12 @@ The idea we had to write the sentences module translation was born by seeking re
 In accordance with our thoughts, **XSV** order expose a form of empirical translation rule. 
 In fact, for most of the analyzed sentences, we only need to move any complement to the beginning of the sentence to be translated to complete the translation task.
 
-Therefore, the simplest idea to make the translation possible was to create a **set of translation rules** designed to identify those parts of speech to be moved within sentences to achieve our goal.
+Therefore, the simplest idea to make the translation possible was to create a **set of translation rules** designed to identify the parts of speech to be moved within sentences to achieve our goal.
 
 # Requirements
 1. Writing down a generic **Context-Free Grammar**, and its respective conversion to Chomsky Normal Form, able to correctly express the chosen sentences
 
-2. Implementation of the **Cocke–Kasami-Younger** (alternatively called **CKY**, or **CYK**) algorithm*
+2. Implementation of the **Cocke–Kasami-Younger** algorithm
 
 3. **Manipulation** of the previous phase's output in order to obtain the **input translation**
 
@@ -57,7 +70,7 @@ Context-Free Grammar we proposed inside *YodaCFG.cfg* file covers a wide type of
 - *Adjective phrase* (**ADJP**)
 - *Adverbial phrase* (**ADVP**)
 
-Inside the file, you can also found the following **POS**:
+Inside the file, we also modelled the following **Part Of Speech**:
 - *Common nouns* (**NOUN**)
 - *Proper nouns and Personal pronouns* (**NP**)
 - *Auxiliary verbs* (**AUX**)
@@ -74,7 +87,7 @@ Along the project's development, we used **nltk** and **numpy**, two of the most
 
 **nltk** library was used to **create the Context-Free Grammar** from *YodaCFG.cfg* file and to provide the **Tree data structure** to perform CKY algorithm and to **visualize** parsing and translation outputs.
 
-**numpy** library was used to create the matrix, essential data structure to perform CKY algorithm, using the built-ins `numpy.ndarray` type.
+**numpy** library was used to create the essential data structure to perform CKY algorithm using the built-ins `numpy.ndarray` type.
 
 ## Modules
 We choose to split the project into four modules:
@@ -180,7 +193,7 @@ def find_head_gr(first: Nonterminal, second: Nonterminal, grammar: CFG):
 
 *"May the Force be with you"*.
 
-| Authors | Giacomo Costarelli <br> <a href="giacomo.costarelli39@gmail.com">giacomo.costarelli39@gmail.com</a>) | Giuseppe Gabbia <br> (<a href="beppegabbia@gmail.com">beppegabbia@gmail.com</a>) |
+| Authors | Giacomo Costarelli <br> (<a href="giacomo.costarelli39@gmail.com">giacomo.costarelli39@gmail.com</a>) | Giuseppe Gabbia <br> (<a href="beppegabbia@gmail.com">beppegabbia@gmail.com</a>) |
 | ------------- | ------------- | ------------- |
 | Github URLs | <a href="https://github.com/giacomocostarelli">https://github.com/giacomocostarelli</a>  | <a href="https://github.com/beppe95">https://github.com/beppe95</a> |
 
