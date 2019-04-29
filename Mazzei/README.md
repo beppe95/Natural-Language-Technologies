@@ -85,8 +85,8 @@ Along the project's development, we used **nltk** and **numpy**, two of the most
 We choose to split the project into **four modules**:
 * `main` which initializes:
   * **filesystem path** to make the *YodaCFG.cfg* file available
-  * a list containing the **input sentences**, named `sentences`
-  * a list of **Nonterminal objects** used to make the translation task, named `translation_rules`
+  * a list containing the **input sentences** to be translated , named `sentences`
+  * a list of `Nonterminal` objects used to make the translation task, named `translation_rules`
 
 * `cky` which contains the CKY algorithm implementation
 * `translate`which contains the translation implementation
@@ -94,7 +94,19 @@ We choose to split the project into **four modules**:
 
 
 ### `cky` module description
+Module which implements the **Cocke–Kasami-Younger parsing algorithm**. 
+Method's *inputs* are:
+* a list of words get by, named `words`  
+* a Context-Free-Grammar, named `grammar`  
 
+CKY builds a matrix, named `table` instance of `numpy.ndarray`. Each matrix's element is a potentially empty `list` of `nltk.Tree`. 
+
+The implementation determines if exists or not a syntactic tree checking if the matrix's element at position ![equation](https://latex.codecogs.com/gif.latex?%5B0%2C%20n-1%5D) is not empty.
+
+If it's not empty then the list may contains one or, in case of grammar ambiguity, more syntactic tree. In both cases, the algorithm returns the first available syntactic tree not considering any type of grammar type.
+
+Otherwise an exception will be thrown.
+ 
 <pre lang=python>
 def cky(words: list, grammar: CFG) -> Tree:
     """
