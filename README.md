@@ -1,5 +1,5 @@
-# Natural-Language-Tecnologies
-Exercises for Natural-Language-Tecnologies Msc course at University of Turin.
+# Natural-Language-Technologies
+Exercises for Natural-Language-Technologies Msc course at University of Turin.
 
 On this course, basic elements on modern technologies for Natural Language Processing are proposed. 
 There are three main components:
