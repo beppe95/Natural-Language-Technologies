@@ -1,4 +1,4 @@
-# Natural-Language-Tecnologies
+# Natural-Language-Technologies
 # Basic Italian-Yoda transfer translator
 
 <p align="center">
@@ -141,6 +141,15 @@ def cky(words: list, grammar: CFG) -> Tree:
 
 
 ### `translate` module description
+Module which implements the empirical translation rule mentioned before. 
+Method's *inputs* are:
+* a tree, instance of `nltk.Tree`, named `root`  
+* a list of `Nonterminal` object, named `translation_rules`  
+
+This method seeks, inside the syntactic tree returned by `cky` method, a node whose label (`Nonterminal` object) is contained inside `translation_rules` parameter.
+This node is the the subtree's root ...
+
+If `to_be_moved` variable is not empty then we proceed to move the subtree ...
 
 <pre lang=python>
 def yoda_translation(root: Tree, translation_rules: list):
@@ -164,6 +173,15 @@ def yoda_translation(root: Tree, translation_rules: list):
  </pre>
 
 ### `utils` module description
+Module which implements some utils for `cky` module.
+
+First method is used to search the *LHS of a lexical rule* given a terminal symbol and a grammar.
+
+Its *inputs* are:
+* a tree, instance of `nltk.Tree`, named `word`  
+* a list of `Nonterminal` object, named `grammar`  
+
+Its output is 
 
 <pre lang=python>
 def find_lhs_lexical_rule(word: str, grammar: CFG) -> Nonterminal:
@@ -178,6 +196,14 @@ def find_lhs_lexical_rule(word: str, grammar: CFG) -> Nonterminal:
     if lexical_rules:
         return lexical_rules[0].lhs()
 </pre>
+
+Second method is used to search the *LHS of a grammar rule* given the first and the latter half of a grammar rule's RHS and a grammar.
+
+Its *inputs* are:
+* a tree, instance of `nltk.Tree`, named `first`  
+* a list of `Nonterminal` object, named `second` 
+
+Its output is  
 
 <pre lang=python>
 def find_lhs_grammar_rule(first: Nonterminal, second: Nonterminal, grammar: CFG) -> Nonterminal:

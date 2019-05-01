@@ -1,4 +1,4 @@
-from nltk import CFG, Nonterminal
+from nltk import CFG, Tree, Nonterminal
 
 
 def find_lhs_lexical_rule(word: str, grammar: CFG) -> Nonterminal:
@@ -15,7 +15,7 @@ def find_lhs_lexical_rule(word: str, grammar: CFG) -> Nonterminal:
         return lexical_rules[0].lhs()
 
 
-def find_lhs_grammar_rule(first: Nonterminal, second: Nonterminal, grammar: CFG) -> Nonterminal:
+def find_lhs_grammar_rule(first: Tree, second: Tree, grammar: CFG) -> Nonterminal:
     """
     Finds the LHS of a grammar rule contained in the input CFG grammar.
 

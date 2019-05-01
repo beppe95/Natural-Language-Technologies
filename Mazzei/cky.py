@@ -1,5 +1,5 @@
 import numpy
-from nltk import CFG, Tree
+from nltk import CFG, Tree, Nonterminal
 import Mazzei.utils as utils
 
 
@@ -25,13 +25,18 @@ def cky(words: list, grammar: CFG) -> Tree:
     for j in range(1, table_dimension):
         table[j - 1, j] = list()
         table[j - 1, j].append(Tree(utils.find_lhs_lexical_rule(words[j - 1], grammar), [words[j - 1]]))
+
         for i in reversed(range(0, j - 1)):
             table[i, j] = list()
             for k in range(i + 1, j):
-                if table[i, k] is not None and table[k, j] is not None:
-                    table[i, j].append(Tree(utils.find_lhs_grammar_rule(list(table[i, k])[0],
-                                                                        list(table[k, j])[0], grammar),
-                                            [list(table[i, k])[0], list(table[k, j])[0]]))
+                if table[i, k] is not None and len(table[i, k]) != 0 \
+                        and table[k, j] is not None and len(table[k, j]) != 0:
 
-    return table[0, table_dimension - 1][0] if table[0, table_dimension - 1][0] \
-        else Exception("Sentence not supported by written grammar!")
+                    current_lhs = utils.find_lhs_grammar_rule(table[i, k][0], table[k, j][0], grammar)
+                    if current_lhs is not None:
+                        table[i, j].append(Tree(current_lhs, [table[i, k][0], table[k, j][0]]))
+
+    return table[0, table_dimension - 1][0]
+    '''return table[0, table_dimension - 1][0] \
+        if table[0, table_dimension - 1][0] and table[0, table_dimension - 1][0].label() == "S" \
+        else Exception("Sentence not supported by written grammar!")'''
