@@ -1,7 +1,8 @@
-from nltk import Tree
+from nltk import Tree, Nonterminal
+from Mazzei.utils import get_node_to_be_moved
 
 
-def yoda_translation(root: Tree, translation_rules: list):
+def yoda_translation(root: Tree):
     """
     Provides translation from italian language to Yoda-speak language.
 
@@ -9,13 +10,15 @@ def yoda_translation(root: Tree, translation_rules: list):
     Then, it sets the previously obtained subtree as the new left child of a new syntactic tree.
 
     :param root: the syntactic tree to be translated
-    :param translation_rules: list of Nonterminal object used to provide translation from italian to Yoda-speak language
     """
 
-    to_be_moved = list((index for index in root.treepositions()
-                        if isinstance(root[index], Tree) and root[index].label() in translation_rules))[0]
+    sentence_vp_index = list((index for index in root.treepositions()
+                              if isinstance(root[index], Tree)
+                              and (root[index].label() == Nonterminal("VP") or root[index].label() == Nonterminal("AUX"))
+                              and len(root[index]) == 1))
 
-    if to_be_moved:
+    if sentence_vp_index:
+        to_be_moved = get_node_to_be_moved(sentence_vp_index[0])
         prefix = root.__getitem__(to_be_moved)
         root.__setitem__(to_be_moved, Tree("ε", []))
         root = Tree('Yoda Translation', [prefix, root])

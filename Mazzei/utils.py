@@ -30,3 +30,7 @@ def find_lhs_grammar_rule(first: Tree, second: Tree, grammar: CFG) -> Nontermina
 
     if grammar_rules:
         return grammar_rules[0].lhs()
+
+
+def get_node_to_be_moved(vp_index: tuple) -> tuple:
+    return vp_index[:len(vp_index) - 1] + (1,)

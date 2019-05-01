@@ -1,7 +1,7 @@
 from pathlib import Path
-from nltk import CFG, Nonterminal
-import Mazzei.cky as cky_algorithm
-import Mazzei.translate as translate
+from nltk import CFG
+from Mazzei.cky import cky
+from Mazzei.translate import yoda_translation
 
 
 def main():
@@ -12,20 +12,16 @@ def main():
                  "Tu hai amici lì",                             #Amici tu hai lì
                  "Noi siamo illuminati",                        #Illuminati noi siamo
                  "Tu hai molto da apprendere ancora",           #Molto da apprendere ancora tu hai
-                 "Skywalker corre veloce",                      #Veloce(mente) Skywalker corre
+                 "Skywalker corre velocemente",                 #Veloce(mente) Skywalker corre
                  "Il futuro di questo ragazzo è nebuloso"]      #Nebuloso il futuro di questo ragazzo è
-
-    translation_rules = [Nonterminal('ADJP'), Nonterminal('ADJ'),
-                         Nonterminal('VBN'), Nonterminal('ADVP')]
 
     with open(grammar_file, encoding='utf-8') as file:
         grammar = CFG.fromstring(file.read())
     file.close()
 
     for sent in sentences:
-        syntactic_tree = cky_algorithm.cky(sent.split(), grammar)
-        syntactic_tree.draw()
-        #translate.yoda_translation(syntactic_tree, translation_rules)
+        syntactic_tree = cky(sent.split(), grammar)
+        yoda_translation(syntactic_tree)
 
 
 main()
