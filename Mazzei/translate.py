@@ -14,7 +14,7 @@ def yoda_translation(root: Tree):
 
     sentence_vp_index = list((index for index in root.treepositions()
                               if isinstance(root[index], Tree)
-                              and (root[index].label() == Nonterminal("VP") or root[index].label() == Nonterminal("AUX"))
+                              and root[index].label() in [Nonterminal("VP"), Nonterminal("AUX")]
                               and len(root[index]) == 1))
 
     if sentence_vp_index:

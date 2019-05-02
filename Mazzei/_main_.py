@@ -1,3 +1,4 @@
+from sys import exit
 from pathlib import Path
 from nltk import CFG
 from Mazzei.cky import cky
@@ -19,9 +20,13 @@ def main():
         grammar = CFG.fromstring(file.read())
     file.close()
 
-    for sent in sentences:
-        syntactic_tree = cky(sent.split(), grammar)
-        yoda_translation(syntactic_tree)
+    if grammar.is_chomsky_normal_form():
+        for sent in sentences:
+            syntactic_tree = cky(sent.split(), grammar)
+            print(syntactic_tree.height())
+            yoda_translation(syntactic_tree)
+    else:
+        exit('Grammar is not in Chomsky Normal Form!')
 
 
 main()
