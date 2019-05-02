@@ -23,7 +23,6 @@ def main():
     if grammar.is_chomsky_normal_form():
         for sent in sentences:
             syntactic_tree = cky(sent.split(), grammar)
-            print(syntactic_tree.height())
             yoda_translation(syntactic_tree)
     else:
         exit('Grammar is not in Chomsky Normal Form!')
