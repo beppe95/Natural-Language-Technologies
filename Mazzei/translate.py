@@ -1,5 +1,5 @@
 from nltk import Tree, Nonterminal
-from Mazzei.utils import get_node_to_be_moved
+from Mazzei.utils import get_parent, get_right_child
 
 
 def yoda_translation(root: Tree):
@@ -12,15 +12,25 @@ def yoda_translation(root: Tree):
     :param root: the syntactic tree to be translated
     """
 
-    sentence_vp_index = list((index for index in root.treepositions()
-                              if isinstance(root[index], Tree)
-                              and root[index].label() in [Nonterminal("VP"), Nonterminal("AUX")]
-                              and len(root[index]) == 1))
+    current_index = list((index for index in root.treepositions()
+                          if isinstance(root[index], Tree)
+                          and root[index].label() in [Nonterminal("VP"), Nonterminal("AUX")]
+                          and len(root[index]) == 1))[0]
 
-    if sentence_vp_index:
-        to_be_moved = get_node_to_be_moved(sentence_vp_index[0])
-        prefix = root.__getitem__(to_be_moved)
-        root.__setitem__(to_be_moved, Tree("ε", []))
-        root = Tree('Yoda Translation', [prefix, root])
+    parent_index = get_parent(current_index)
+
+    nodes_to_be_moved = []
+    while root.__getitem__(parent_index).label() == Nonterminal("VP"):
+        index_to_be_moved = get_right_child(parent_index)
+        nodes_to_be_moved.append(root.__getitem__(index_to_be_moved))
+
+        root.__setitem__(index_to_be_moved, Tree("ε", []))
+
+        current_index = parent_index
+        parent_index = get_parent(current_index)
+
+    nodes_to_be_moved.reverse()
+    for node in nodes_to_be_moved:
+        root = Tree('Yoda Translation', [node, root])
 
     root.draw()

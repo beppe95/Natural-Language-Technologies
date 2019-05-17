@@ -1,6 +1,6 @@
 from sys import exit
 from numpy import ndarray
-from nltk import CFG, Tree, Nonterminal
+from nltk import CFG, Tree, ParentedTree, Nonterminal
 from Mazzei.utils import find_lhs_lexical_rule, find_lhs_grammar_rule
 
 

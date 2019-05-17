@@ -10,7 +10,7 @@ def main():
     grammar_file = grammar_folder / "YodaCFG.cfg"
 
     sentences = ["Tu avrai novecento anni di età",              #Novecento anni di età tu avrai
-                 "Tu hai amici lì",                             #Amici tu hai lì
+                 "Tu hai amici lì",                             #Amici lì tu hai
                  "Noi siamo illuminati",                        #Illuminati noi siamo
                  "Tu hai molto da apprendere ancora",           #Molto da apprendere ancora tu hai
                  "Skywalker corre velocemente",                 #Veloce(mente) Skywalker corre

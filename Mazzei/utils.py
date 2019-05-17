@@ -32,5 +32,21 @@ def find_lhs_grammar_rule(first: Tree, second: Tree, grammar: CFG) -> Nontermina
         return grammar_rules[0].lhs()
 
 
-def get_node_to_be_moved(vp_index: tuple) -> tuple:
-    return vp_index[:-1] + (1,)
+def get_parent(index: tuple) -> tuple:
+    """
+    Finds node's parent index.
+
+    :param index: tuple which contains the node's index
+    :return: index of the parent node
+    """
+    return index[:-1]
+
+
+def get_right_child(index: tuple) -> tuple:
+    """
+    Finds node's right child index.
+
+    :param index: tuple which contains the node's index
+    :return: index of the right child node
+    """
+    return index + (1, )
