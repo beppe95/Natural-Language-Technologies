@@ -18,15 +18,14 @@ def main():
             row_data = row[0].split(',')
             cs_data = (row_data[0], row_data[1], row_data[2])
 
-            s1 = wordnet.synsets(cs_data[0])[0]
-            s2 = wordnet.synsets(cs_data[1])[0]
-
-            # MAX_DEPTH
-            print(s1._needs_root())
-
-            # LCS
-            print(s1.shortest_path_distance(s2))
-
-            break
 
 main()
+
+'''s1 = wordnet.synsets(cs_data[0])[0]
+       s2 = wordnet.synsets(cs_data[1])[0]
+
+       # MAX_DEPTH
+       print(s1._needs_root())
+
+       # LCS
+       print(s1.shortest_path_distance(s2))'''
