@@ -42,7 +42,7 @@ In accordo con quanto pensato, l'ordine **XSV** espone una sorta di regola di tr
 
 Perciò, l'idea più semplice a cui abbiamo inizialmente pensato è stata quella di creare un **insieme di regole di traduzione** progettato affinché identificasse le parti del discorso opportune da spostare all'interno delle frasi analizzate. 
 
-**Metti tutte le fasi delle roba fatta!**
+Il secondo, ed ultimo approccio, ...
 
 ## Algoritmo CKY
 Tale algoritmo, inventato da John Cocke, Daniel Younger e Tadao Kasami, effettua un **parsing bottom-up** e sfrutta un approccio basato sulla **programmazione dinamica**.
