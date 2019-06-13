@@ -45,6 +45,23 @@ Perciò, l'idea più semplice a cui abbiamo inizialmente pensato è stata quella
 **Metti tutte le fasi delle roba fatta!**
 
 ## Algoritmo CKY
+Tale algoritmo, inventato da John Cocke, Daniel Younger e Tadao Kasami, effettua un **parsing bottom-up** e sfrutta un approccio basato sulla **programmazione dinamica**.
+
+L'**assunzione principale** che facciamo all'interno del seguente algoritmo è che la grammatica context-free da noi utilizzata sia rappresentata in **Forma Normale di Chomsky** ovvero che ogni regola, presente all'interno della grammatica, possieda nella sua *Right Hand Side* o **due simboli non terminali** oppure **un unico simbolo terminale**.
+Ovviamente, tale assunzione non mina la generalità dell'algoritmo in quanto qualsiasi grammatica context-free risulta essere rappresentabile in Forma Normale di Chomsky.
+
+Per rappresentare la struttura dei possibili alberi sintattici, i quali vengono costruiti durante l'esecuzione stessa dell'algoritmo, ci serviamo di una matrice. Nello specifico, andremo ad utilizzare la **matrice triangolare superiore** di una matrice quadrata avente dimensione ![equation](http://latex.codecogs.com/gif.latex?%5Bn&plus;1%5D*%5Bn&plus;1%5D). 
+Ogni **elemento** di tale matrice in **posizione ![equation](http://latex.codecogs.com/gif.latex?%5Bi%2Cj%5D)** conterrà l'insieme di simboli non terminali che rappresentano tutti i costituenti che spaziano dalla posizione *i* alla posizione *j* all'interno della frase di input da noi analizzata.
+
+L'**intuizione** che sta alla base del funzionamento dell'algoritmo è che: poiché ogni cella non terminale, ovvero ogni cella che non rappresenta una foglia del nostro albero sintattico, possiede due figli, ne segue che per ogni costituente contenuto all'interno di tale cella esiste una posizione *k* tale per cui ogni costituente può essere diviso in due parti tali che ![equation](http://latex.codecogs.com/gif.latex?i%5Cleq%20k%5Cleq%20j).
+Data tale posizione *k*, la prima metà del costituente sarà memorizzata in posizione ![equation](http://latex.codecogs.com/gif.latex?%5Bi%2Ck%5D) mentre la seconda metà del costituente sarà memorizzata in posizione ![equation](http://latex.codecogs.com/gif.latex?%5Bk%2Cj%5D).
+
+Un'**osservazione** che è molto importante fare è che tale algoritmo, così presentato, risulta essere un semplice **recognizer** e non un **algoritmo di parsing**. Questo avviene in quanto lo scopo principale di CKY è quello di verificare se, data una grammatica context-free, una data frase sia grammaticale o meno.
+Per effettuare la trasformazione da recognizer a parser sono sufficienti due semplici modifiche:
+ 1. inserire l'utilizzo dei **backtrace** per ogni simbolo non terminale presente all'interno della matrice così che ognuno di essi risulti associato all'entry della matrice da cui è stato derivato
+ 2. permettere l'**inserimento dello stesso simbolo non terminale** all'interno di uno stesso elemento della matrice.
+
+Con tali modifiche, alla terminazione dell'algoritmo, la matrice conterrà tutti i possibili alberi sintattici per la frase analizzata attraverso il task di parsing sintattico.
 
 # Requisiti
 1. Scrittura di una **Grammatica-Context-Free**, e della sua rispettiva conversione in **Forma Normale di Chomsky**, in grado di generare correttamente le frasi scelte
@@ -59,22 +76,15 @@ La scelta, di comune accordo, è ricaduta su tale linguaggio per via dell'estrem
 Inoltre, un'altra motivazione è rappresentata dalla grande disponibilità di librerie tra cui **Natural Language ToolKit** (noto come **NLTK**) e **numpy**, utilizzate all'interno del progetto stesso e che verranno discusse in seguito.
 
 ## Grammatica
-La grammatica context-free proposta all'interno del file *YodaCFG.cfg* è in grado di trattare numerose **unità sintattiche** tra cui:
-- *Noun phrase* (**NP**)
+La grammatica context-free proposta all'interno del file *YodaCFG.cfg* è in grado di trattare le seguenti **unità sintattiche** tra cui:
+- *Proper nouns and Personal pronouns* (**NP**)
 - *Verbal phrase* (**VP**)
+- *Auxiliary verbs* (**AUX**)
 - *Propositional phrase* (**PP**)
 - *Adjective phrase* (**ADJP**)
 - *Adverbial phrase* (**ADVP**)
-
-All'interno del file, sono anche modellate le seguenti **Part Of Speech**:
-- *Common nouns* (**NOUN**)
-- *Proper nouns and Personal pronouns* (**NP**)
-- *Auxiliary verbs* (**AUX**)
-- ** (**VBN**)
-- ** (**VERB**)
 - *Determiners* (**DET**)
 - *Adverbs* (**ADV**)
-- *Pronouns, excluding personal pronouns* (**PRON**)
 - *Adpositions* (**ADP**)
 - *Adjectives* (**ADJ**)
 
@@ -169,9 +179,9 @@ Ogni elemento di tale matrice è una lista tipata come `list`, potenzialmente vu
 
 L'implementazione determina se esiste o meno un albero sintattico per la frase da noi considerata andando a verificare che l'elemento della matrice in posizione ![equation](https://latex.codecogs.com/gif.latex?%5B0%2C%20n-1%5D) non sia vuoto. 
 
-Se tale elemento non risulta essere vuoto allora la lista può contenere uno o, in caso di ambiguità grammaticale, più di un albero sintattico. In entrambi i casi, l'algoritmo restituisce il primo albero sintattico disponibile.
+Se tale elemento non risulta essere vuoto allora la lista può contenere uno o, in caso di ambiguità grammaticale, più di un albero sintattico. In entrambi i casi, l'algoritmo restituisce il primo albero sintattico disponibile il quale, ovviamente, dovrà risultare essere corretto (cioè, dovrà contenere, all'interno della radice, il simbolo non terminale corrispondente al simbolo di start relativo alla grammatica da noi scritta).
 
-In tutti gli altri casi viene generata un'eccezione.
+In tutti gli altri casi effettuiamo una `sys.exit` fornendo il seguente messaggio di errore `Sentence not supported by chosen grammar!`.
 
 Di seguito riportiamo il codice dell'algoritmo CKY:
 
