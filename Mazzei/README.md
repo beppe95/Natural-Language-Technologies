@@ -119,16 +119,44 @@ La libreria **numpy** è stata utilizzata per creare la struttura dati essenzial
 
 
 ## Moduli python
-Abbiamo deciso di suddividere il progetto in **?? moduli**:
+Abbiamo deciso di suddividere il progetto in **quattro moduli** che sono rispettivamente:
 
-* `main` che inizializza:
-  * **filesystem path** to make the *YodaCFG.cfg* file available
-  * a list containing the **input sentences** to be translated , named `sentences`
-
+* `main` che rappresenta il modulo principale del progetto
 * `cky` che contiene l'implementazione dell'algoritmo CKY
-* `translate` che contiene l'implementazione del metodo utilizzare per effettuare la traduzione transfer richiesta
-* `utils` che contiene metodi di supporto utilizzati all'interno dell'algoritmo CKY
+* `translate` che contiene l'implementazione del metodo utilizzato per effettuare la traduzione transfer richiesta
+* `utils` che contiene metodi di supporto utilizzati all'interno dei moduli `cky` e `utils`
 
+### Descrizione modulo `main`
+Questo modulo è incaricato di inizializzare rispettivamente:
+  * una variabile contenente la posizione, all'interno del filesystem, del file *YodaCFG.cfg* definita come `grammar_file`
+  * una lista contenente le **frasi** da dover tradurre, definita come `sentences`
+
+Successivamente, il modulo si occupa di leggere il file *YodaCFG.cfg* e di estrarre da esso la grammatica context-free da utilizzare per il progetto. Infine, solamente se la grammatica estratta al passo precedente risulta essere espressa in **Forma Normale di Chomsky**, procediamo a richiamare l'algoritmo di parsing CKY e, solo successivamente, effettuiamo il task di traduzione transfer richiesto; altrimenti, se la grammatica **non** risulta essere in **Forma Normale di Chomsky** allora effettuiamo una `sys.exit` fornendo il seguente messaggio di errore `Grammar is not in Chomsky Normal Form!`.
+
+Di seguito riportiamo il codice contenuto all'interno del modulo `main`:
+<pre lang=python>
+def main():
+    grammar_folder = Path.cwd() / "Grammar"
+    grammar_file = grammar_folder / "YodaCFG.cfg"
+
+    sentences = ["Tu avrai novecento anni di età",             
+                 "Tu hai amici lì",                             
+                 "Noi siamo illuminati",                        
+                 "Tu hai molto da apprendere ancora",          
+                 "Skywalker corre velocemente",                 
+                 "Il futuro di questo ragazzo è nebuloso"]    
+
+    with open(grammar_file, encoding='utf-8') as file:
+        grammar = CFG.fromstring(file.read())
+    file.close()
+
+    if grammar.is_chomsky_normal_form():
+        for sent in sentences:
+            syntactic_tree = cky(sent.split(), grammar)
+            yoda_translation(syntactic_tree)
+    else:
+        exit('Grammar is not in Chomsky Normal Form!')
+</pre>
 
 ### Descrizione modulo `cky`
 Modulo che implementa l'**algoritmo di parsing Cocke–Kasami-Younger**:
