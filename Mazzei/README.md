@@ -80,7 +80,7 @@ All'interno del file, sono anche modellate le seguenti **Part Of Speech**:
 
 Di seguito riportiamo, rispettivamente le **regole grammaticali**:
 
-<pre lang=text>
+```
 ############################
 # Grammar Rules
 ############################
@@ -91,11 +91,11 @@ VP   ->  AUX VBN | VP NP | VP ADJP | VP ADJ | VP ADV | VP PP
 PP   ->  ADP NP | ADP VP
 ADJP ->  ADJ NP | ADJ PP
 ADVP ->  NOUN ADV
-</pre>
+```
 
 e le **regole lessicali** della grammatica da noi utilizzata:
 
-<pre lang=text>
+```
 #############################
 # Lexical Rules
 #############################
@@ -108,7 +108,7 @@ DET  -> 'Il'
 ADV  -> 'lì' | 'ancora' | 'velocemente' | 'molto'
 ADP  -> 'di' | 'da'
 ADJ  -> 'novecento' | 'nebuloso' | 'questo'
-</pre>
+```
 
 ## Librerie utilizzate
 Come menzionato in precedenza, durante lo sviluppo del progetto abbiamo deciso di utilizzare **nltk** e **numpy** due delle librerie Python più note ed utilizzato nei vari ambienti di sviluppo.
@@ -134,21 +134,21 @@ Questo modulo è incaricato di inizializzare rispettivamente:
 Successivamente, il modulo si occupa di leggere il file *YodaCFG.cfg* e di estrarre da esso la grammatica context-free da utilizzare per il progetto. Infine, solamente se la grammatica estratta al passo precedente risulta essere espressa in **Forma Normale di Chomsky**, procediamo a richiamare l'algoritmo di parsing CKY e, solo successivamente, effettuiamo il task di traduzione transfer richiesto; altrimenti, se la grammatica **non** risulta essere in **Forma Normale di Chomsky** allora effettuiamo una `sys.exit` fornendo il seguente messaggio di errore `Grammar is not in Chomsky Normal Form!`.
 
 Di seguito riportiamo il codice contenuto all'interno del modulo `main`:
-<pre lang=python>
-def main():
+
+```python
+if __name__ == '__main__':
     grammar_folder = Path.cwd() / "Grammar"
     grammar_file = grammar_folder / "YodaCFG.cfg"
 
     sentences = ["Tu avrai novecento anni di età",             
                  "Tu hai amici lì",                             
                  "Noi siamo illuminati",                        
-                 "Tu hai molto da apprendere ancora",          
+                 "Tu hai molto da apprendere ancora",           
                  "Skywalker corre velocemente",                 
-                 "Il futuro di questo ragazzo è nebuloso"]    
+                 "Il futuro di questo ragazzo è nebuloso"]     
 
     with open(grammar_file, encoding='utf-8') as file:
         grammar = CFG.fromstring(file.read())
-    file.close()
 
     if grammar.is_chomsky_normal_form():
         for sent in sentences:
@@ -156,7 +156,7 @@ def main():
             yoda_translation(syntactic_tree)
     else:
         exit('Grammar is not in Chomsky Normal Form!')
-</pre>
+```
 
 ### Descrizione modulo `cky`
 Modulo che implementa l'**algoritmo di parsing Cocke–Kasami-Younger**:
@@ -164,7 +164,7 @@ Gli input del metodo sono:
 * una lista di parole, definita come `words`  
 * una Grammatica Context-Free, definita come `grammar`  
   
-L'algoritmo CKY costruisce una matrice, definita come `table` tipata come `numpy.ndarray`. 
+L'algoritmo CKY costruisce una matrice, definita all'interno del nostro metodo come `table` tipata come `numpy.ndarray`. 
 Ogni elemento di tale matrice è una lista tipata come `list`, potenzialmente vuota, di `nltk.Tree`.
 
 L'implementazione determina se esiste o meno un albero sintattico per la frase da noi considerata andando a verificare che l'elemento della matrice in posizione ![equation](https://latex.codecogs.com/gif.latex?%5B0%2C%20n-1%5D) non sia vuoto. 
@@ -175,38 +175,46 @@ In tutti gli altri casi viene generata un'eccezione.
 
 Di seguito riportiamo il codice dell'algoritmo CKY:
 
-<pre lang=python>
+```python
 def cky(words: list, grammar: CFG) -> Tree:
     """
     The Cocke Kasami Younger Algorithm (CKY) is an efficient parsing algorithm for Context-Free grammars.
+
     The structure of the rules must be in Chomsky Normal Form. CNF rules' right hand side can contain:
         1 - at most 2 symbols;
         2 - a terminal;
         3 - a null string identified by ε
+
     Given a sentence, the algorithm builds up, via dynamic programming, a syntactic tree consistent with the CFG input
     grammar.
+
     :param words: sentence split into words
     :param grammar: CFG grammar
     :return: syntactic tree, instance of nltk Tree.
     """
     table_dimension = len(words) + 1
-    table = numpy.ndarray(shape=(table_dimension, table_dimension), dtype=list)
+    table = ndarray(shape=(table_dimension, table_dimension), dtype=list)
 
     for j in range(1, table_dimension):
         table[j - 1, j] = list()
-        table[j - 1, j].append(Tree(utils.find_lhs_lexical_rule(words[j - 1], grammar), [words[j - 1]]))
+        table[j - 1, j].append(Tree(find_lhs_lexical_rule(words[j - 1], grammar), [words[j - 1]]))
+
         for i in reversed(range(0, j - 1)):
             table[i, j] = list()
             for k in range(i + 1, j):
-                if table[i, k] is not None and table[k, j] is not None:
-                    table[i, j].append(Tree(utils.find_lhs_grammar_rule(list(table[i, k])[0],
-                                                                        list(table[k, j])[0], grammar),
-                                            [list(table[i, k])[0], list(table[k, j])[0]]))
+                if table[i, k] is not None and len(table[i, k]) != 0 \
+                        and table[k, j] is not None and len(table[k, j]) != 0:
 
-    return table[0, table_dimension - 1][0] if table[0, table_dimension - 1][0] \
-        else Exception("Sentence not supported by written grammar!")
-</pre>
+                    current_lhs = find_lhs_grammar_rule(table[i, k][0], table[k, j][0], grammar)
+                    if current_lhs is not None:
+                        table[i, j].append(Tree(current_lhs, [table[i, k][0], table[k, j][0]]))
 
+    if len(table[0, table_dimension - 1]) != 0 and table[0, table_dimension - 1][0].label() == Nonterminal("S"):
+        table[0, table_dimension - 1][0].draw()
+        return table[0, table_dimension - 1][0]
+    else:
+        exit('Sentence not supported by chosen grammar!')
+```
 
 ### Descrizione modulo `translate`
 Modulo che implementa la regola di traduzione menzionata precedentemente.
@@ -217,26 +225,40 @@ Gli input del metodo sono:
 
 Di seguito riportiamo il codice che attua la traduzione di un dato albero sintattico:
 
-<pre lang=python>
-def yoda_translation(root: Tree, translation_rules: list):
+```python
+def yoda_translation(root: Tree):
     """
     Provides translation from italian language to Yoda-speak language.
+
     It filters out from nltk tree's indices of the subtree whose label is contained in 'translation_rules'.
     Then, it sets the previously obtained subtree as the new left child of a new syntactic tree.
+
     :param root: the syntactic tree to be translated
-    :param translation_rules: list of Nonterminal object used to provide translation from italian to Yoda-speak language
     """
 
-    to_be_moved = list((index for index in root.treepositions()
-                        if isinstance(root[index], Tree) and root[index].label() in translation_rules))[0]
+    current_index = list((index for index in root.treepositions()
+                          if isinstance(root[index], Tree)
+                          and root[index].label() in [Nonterminal("VP"), Nonterminal("AUX")]
+                          and len(root[index]) == 1))[0]
 
-    if to_be_moved:
-        prefix = root.__getitem__(to_be_moved)
-        root.__setitem__(to_be_moved, Tree("ε", []))
-        root = Tree('Yoda Translation', [prefix, root])
+    parent_index = get_parent(current_index)
+
+    nodes_to_be_moved = []
+    while root.__getitem__(parent_index).label() == Nonterminal("VP"):
+        index_to_be_moved = get_right_child(parent_index)
+        nodes_to_be_moved.append(root.__getitem__(index_to_be_moved))
+
+        root.__setitem__(index_to_be_moved, Tree("ε", []))
+
+        current_index = parent_index
+        parent_index = get_parent(current_index)
+
+    nodes_to_be_moved.reverse()
+    for node in nodes_to_be_moved:
+        root = Tree('Yoda Translation', [node, root])
 
     root.draw()
- </pre>
+```
 
 ### Descrizione modulo `utils`
 Modulo che implementa alcuni metodi di supporto utilizzati all'interno del modulo `cky`.
@@ -248,10 +270,13 @@ I suoi input sono:
 
 Il suo output è:
 
-<pre lang=python>
+Riportiamo di seguito il codice del suddetto metodo:
+
+```python
 def find_lhs_lexical_rule(word: str, grammar: CFG) -> Nonterminal:
     """
     Finds the LHS of a lexical rule contained in the input CFG grammar.
+
     :param word: the RHS of a lexical rule
     :param grammar: input CFG grammar
     :return: the LHS of a lexical rule, if it exists
@@ -260,9 +285,9 @@ def find_lhs_lexical_rule(word: str, grammar: CFG) -> Nonterminal:
                          if len(prod.rhs()) == 1 and prod.rhs()[0] == word))
     if lexical_rules:
         return lexical_rules[0].lhs()
-</pre>
+```
 
-Il primo metodo è utilizzato per ricercare l'*LHS di una regola grammatcale* dati due simboli non terminali, corrispondenti alla *prima e all'ultima metà dell'RHS di una regola grammaticale*, ed una grammatica.
+Il secondo metodo è utilizzato, invece, per ricercare l'*LHS di una regola grammatcale* dati due simboli non terminali, corrispondenti alla *prima e all'ultima metà dell'RHS di una regola grammaticale*, ed una grammatica.
 
 I suoi input sono;
 * 
@@ -270,10 +295,13 @@ I suoi input sono;
 
 Il suo output è:
 
-<pre lang=python>
-def find_lhs_grammar_rule(first: Nonterminal, second: Nonterminal, grammar: CFG) -> Nonterminal:
+Riportiamo di seguito il codice del suddetto metodo:
+
+```python
+def find_lhs_grammar_rule(first: Tree, second: Tree, grammar: CFG) -> Nonterminal:
     """
     Finds the LHS of a grammar rule contained in the input CFG grammar.
+
     :param first: first half of the grammar rule's RHS
     :param second: latter half of the grammar rule's RHS
     :param grammar: input CFG grammar
@@ -285,8 +313,33 @@ def find_lhs_grammar_rule(first: Nonterminal, second: Nonterminal, grammar: CFG)
 
     if grammar_rules:
         return grammar_rules[0].lhs()
-</pre>
+```
 
+Il terzo ed il quarto metodo contenuti all'interno di questo modulo vengono, invece, utilizzati nel modulo `translate`.
+
+Riportiamo di seguito i codici di questi ultimi metodi descritti:
+
+```python
+def get_parent(index: tuple) -> tuple:
+    """
+    Finds node's parent index.
+
+    :param index: tuple which contains the node's index
+    :return: index of the parent node
+    """
+    return index[:-1]
+```
+
+```python
+def get_right_child(index: tuple) -> tuple:
+    """
+    Finds node's right child index.
+
+    :param index: tuple which contains the node's index
+    :return: index of the right child node
+    """
+    return index + (1, )
+```
 
 # Risultati ottenuti
 
