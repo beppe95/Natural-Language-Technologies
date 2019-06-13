@@ -1,6 +1,8 @@
 from pathlib import Path
 from collections import defaultdict
-from nltk import sent_tokenize, word_tokenize, pos_tag
+from nltk import sent_tokenize, word_tokenize, pos_tag, ne_chunk, Tree
+from nltk.sem import extract_rels, rtuple
+from re import compile
 
 
 def make_novel_dict(novel: str) -> defaultdict:
@@ -36,3 +38,26 @@ def ie_pre_process(sentence: str) -> list:
     sentence = [word_tokenize(sent) for sent in sentence]
     sentence = [pos_tag(sent) for sent in sentence]
     return sentence
+
+
+def named_entity_tagging(tagged_sentence: list) -> Tree:
+    """
+
+    :param tagged_sentence:
+    :return:
+    """
+    return ne_chunk(tagged_sentence, binary=True)
+
+
+def relation_extraction(chunk_tree, pattern) -> str:
+    """
+
+    :param chunk_tree:
+    :param pattern:
+    :return:
+    """
+    reg_expr = compile(pattern)
+    for rel in extract_rels('NE', 'NE', chunk_tree, corpus='ieer', pattern=reg_expr):
+        print(type(rtuple(rel)))
+
+

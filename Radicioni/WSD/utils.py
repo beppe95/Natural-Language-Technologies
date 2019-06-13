@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-from Radicioni.WSD.simplified_lesk import simplified_lesk
+from Radicioni.WSD.lesk_algorithm import simplified_lesk
 from Radicioni.WSD.semcor import semcor_extraction
 from nltk.wsd import lesk
 
