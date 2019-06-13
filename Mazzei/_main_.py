@@ -5,7 +5,7 @@ from Mazzei.cky import cky
 from Mazzei.translate import yoda_translation
 
 
-def main():
+if __name__ == '__main__':
     grammar_folder = Path.cwd() / "Grammar"
     grammar_file = grammar_folder / "YodaCFG.cfg"
 
@@ -18,7 +18,6 @@ def main():
 
     with open(grammar_file, encoding='utf-8') as file:
         grammar = CFG.fromstring(file.read())
-    file.close()
 
     if grammar.is_chomsky_normal_form():
         for sent in sentences:
@@ -27,6 +26,4 @@ def main():
     else:
         exit('Grammar is not in Chomsky Normal Form!')
 
-
-main()
 

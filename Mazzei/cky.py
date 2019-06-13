@@ -1,6 +1,6 @@
 from sys import exit
 from numpy import ndarray
-from nltk import CFG, Tree, ParentedTree, Nonterminal
+from nltk import CFG, Tree, Nonterminal
 from Mazzei.utils import find_lhs_lexical_rule, find_lhs_grammar_rule
 
 
@@ -41,5 +41,5 @@ def cky(words: list, grammar: CFG) -> Tree:
         table[0, table_dimension - 1][0].draw()
         return table[0, table_dimension - 1][0]
     else:
-        exit('Sentence not supported by written grammar!')
+        exit('Sentence not supported by chosen grammar!')
 
