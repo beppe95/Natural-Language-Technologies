@@ -5,16 +5,15 @@
   <img src="https://i.dlpng.com/static/png/173636_thumb.png"/>
 </p>
 
-# Project Description
-The project consists in the implementation of a **basic IT → IT-YO transfer translator** which takes an italian sentence, as input, and provides its traslation into Jedi Master Yoda's speech from Star Wars.
+# Descrizione del progetto
+Il progetto consiste nell'implementazione di un **traduttore di tipo transfer IT → IT-YO** il quale prende in input una frase scritta in linguaggio italiano e fornisce, in output, la rispettiva traduzione nella caratteristica lingua parlata da Yoda, il noto Gran Maestro del Consiglio Jedi appartenente alla saga di Star Wars.
 
-**Parsing algorithm** we need to use and to implement is **Cocke–Kasami-Younger** (alternatively called **CKY**, or **CYK**) algorithm for context-free grammars which is based on bottom-up parsing and dynamic programming.
-Even if exist other algorithm with better average running time complexity, CKY is the only one that has a worst case running time complexity of ![equation](http://latex.codecogs.com/gif.latex?O%28n%5E3%5Ccdot%20%7CG%7C%29) where ![equation](http://latex.codecogs.com/gif.latex?n) is the *length* of the parsed string and ![equation](http://latex.codecogs.com/gif.latex?%7CG%7C) is the size of the CNF grammar ![equation](http://latex.codecogs.com/gif.latex?G).
+L'**algoritmo di parsing** da utilizzare e da implementare è l'algoritmo **Cocke–Kasami-Younger** (noto anche come **CKY**, or **CYK**) per grammatiche context-free il quale risulta essere basato su di un approccio di tipo bottom-up e sulla programmazione dinamica.
+Anche se esistono altri algoritmi con complessità temporali migliori, CKY è l'unico tra questi che possiede una complessità temporale, nel caso peggiore, pari a ![equation](http://latex.codecogs.com/gif.latex?O%28n%5E3%5Ccdot%20%7CG%7C%29) dove ![equation](http://latex.codecogs.com/gif.latex?n) è la *lunghezza* della stringa parsificata e ![equation](http://latex.codecogs.com/gif.latex?%7CG%7C) è la *dimensione* della grammatica context-free da noi utilizzata ![equation](http://latex.codecogs.com/gif.latex?G).
 
+L'insieme di **frasi**, e le loro **rispettive traduzioni**, da noi scelte sono le seguenti:
 
-The set of **sentences**, and their **respective translations**, we have chosen is the following one:
-
-|               Input               |          Yoda Translation         |
+|               Input               |          Traduzione Yoda          |
 |:---------------------------------:|:---------------------------------:|
 |   Tu avrai novecento anni di età  |   Novecento anni di età tu avrai  |
 |          Tu hai amici lì          |          Amici hai tu lì          |
@@ -23,46 +22,51 @@ The set of **sentences**, and their **respective translations**, we have chosen 
 |       Skywalker corre veloce      |       Veloce Skywalker corre      |
 |   Skywalker sarà tuo apprendista  |   Tuo apprendista Skywalker sarà  |
 
-## Yoda's speech patterns
-Master Jedi Yoda is one of the most iconic character of the Star Wars franchise created by George Lucas.
+## Pattern linguistici di Yoda
+Yoda, Gran Maestro del Consiglio Jedi, è uno dei personaggi più iconici della saga di Star Wars creata da George Lucas.
 
-He's particularly known because of his bizarre linguistic schemes which have been the subject of discussion among linguists. These schemes have been associated with an **Object–Subject–Verb** (**OSV**) order.
+Tale personaggio risulta essere particolarmente conosciuto per via dei suoi schemi linguistici alquanto bizzarri i quali sono stati oggetto di discussione tra i linguisti. Tali schemi risultano essere associati ad un ordine dei costituenti che prende il nome di ordine **Oggetto–Soggetto–Verbo** (**OSV**).
 
-This last scheme, generally referred as **XSV** order, is different by the **Subject–Object–Verb** (**OSV**) order we are accustomed to because it puts any complement before the subject and the verb of the sentence.
+Quest'ultimo schema, al quale ci riferiamo generalmente con il nome di ordine **XSV**, risulta essere differente dall'ordine **Soggetto–Oggetto–Verbo** (**SOV**) che colloca qualsiasi complemento prima del soggetto e del verbo presenti all'interno della frase da noi analizzata.
 
-An example using an english sentence with an **OSV** order:
+Forniamo, rispettivamente, un esempio di una frase in lingua inglese avente un ordine **SOV**:
 > You must seek advice!
 
-An example using the same english sentence but with an **XSV** order:
+ed un esempio utilizzando la stessa frase in lingua inglese ma avente, questa volta, un ordine **XSV**:
 > Seek advice, you must! 
 
-## Ideas
-The idea we had to write the sentences module translation was born by seeking recurrent patterns within the sentences and their respective translation.
+## Approcci alla risoluzione del problema
+L'idea di scrivere un modulo di traduzione per le frasi presentate precedentemente è nata dalla ricerca di pattern ricorrenti all'interno delle stesse frasi e delle loro rispettive traduzioni.
 
-In accordance with our thoughts, **XSV** order expose a form of empirical translation rule. 
-In fact, for most of the analyzed sentences, we only need to move any complement to the beginning of the sentence to be translated to complete the translation task.
+In accordo con quanto pensato, l'ordine **XSV** espone una sorta di regola di traduzione empirica. Difatti, per la maggior parte delle frasi da noi analizzate, dobbiamo solamente spostare ciascun complemento all'inizio della frase da dover tradurre per completare, in modo coerente, il task di traduzione.
 
-Therefore, the simplest idea to make the translation possible was to create a **set of translation rules** designed to identify the parts of speech to be moved within sentences to achieve our goal.
+Perciò, l'idea più semplice a cui abbiamo inizialmente pensato è stata quella di creare un **insieme di regole di traduzione** progettato affinché identificasse le parti del discorso opportune da spostare all'interno delle frasi analizzate. 
 
-# Requirements
-1. Writing down a generic **Context-Free Grammar**, and its respective conversion to Chomsky Normal Form, able to correctly express the chosen sentences
+**Metti tutte le fasi delle roba fatta!**
 
-2. Implementation of the **Cocke–Kasami-Younger** algorithm
+## Algoritmo CKY
 
-3. **Manipulation** of the previous phase's output in order to obtain the **input translation**
+# Requisiti
+1. Scrittura di una **Grammatica-Context-Free**, e della sua rispettiva conversione in **Forma Normale di Chomsky**, in grado di generare correttamente le frasi scelte
 
+2. Implementazione dell'algoritmo **Cocke–Kasami-Younger**
+
+3. **Manipolazione** dell'output della fase precedente in modo tale da ottenere le **traduzioni** desiderate.
 
 # Project management
+Il linguaggio di programmazione scelto per sviluppare il seguente progetto è *Python* nella versione 3.7.x. 
+La scelta, di comune accordo, è ricaduta su tale linguaggio per via dell'estrema semplicità con cui è possibile modellare task, anche abbastanza complessi, attraverso la scrittura di codice modulare ed estremamente sintetico.
+Inoltre, un'altra motivazione è rappresentata dalla grande disponibilità di librerie tra cui **Natural Language ToolKit** (noto come **NLTK**) e **numpy**, utilizzate all'interno del progetto stesso e che verranno discusse in seguito.
 
-## Grammar
-Context-Free Grammar we proposed inside *YodaCFG.cfg* file covers a wide type of **syntactic units** including:
+## Grammatica
+La grammatica context-free proposta all'interno del file *YodaCFG.cfg* è in grado di trattare numerose **unità sintattiche** tra cui:
 - *Noun phrase* (**NP**)
 - *Verbal phrase* (**VP**)
 - *Propositional phrase* (**PP**)
 - *Adjective phrase* (**ADJP**)
 - *Adverbial phrase* (**ADVP**)
 
-Inside the file, we also modelled the following **Part Of Speech**:
+All'interno del file, sono anche modellate le seguenti **Part Of Speech**:
 - *Common nouns* (**NOUN**)
 - *Proper nouns and Personal pronouns* (**NP**)
 - *Auxiliary verbs* (**AUX**)
@@ -74,39 +78,103 @@ Inside the file, we also modelled the following **Part Of Speech**:
 - *Adpositions* (**ADP**)
 - *Adjectives* (**ADJ**)
 
-## Used libraries
-Along the project's development, we used **nltk** and **numpy**, two of the most used Python libraries.
+Di seguito riportiamo, rispettivamente le **regole grammaticali**:
 
-**nltk** library was used to **create the Context-Free Grammar** from *YodaCFG.cfg* file and to provide the **Tree data structure** to perform CKY algorithm and to **visualize** parsing and translation outputs.
+<pre lang=text>
+############################
+# Grammar Rules
+############################
 
-**numpy** library was used to create the essential data structure to perform CKY algorithm using the built-ins `numpy.ndarray` type.
+S    ->  NP VP
+NP   ->  DET NP | NP PP | ADJ NP
+VP   ->  AUX VBN | VP NP | VP ADJP | VP ADJ | VP ADV | VP PP
+PP   ->  ADP NP | ADP VP
+ADJP ->  ADJ NP | ADJ PP
+ADVP ->  NOUN ADV
+</pre>
 
-## Modules
-We choose to split the project into **four modules**:
-* `main` which initializes:
-  * **filesystem path** to make the *YodaCFG.cfg* file available
-  * a list containing the **input sentences** to be translated , named `sentences`
-  * a list of `Nonterminal` objects used to make the translation task, named `translation_rules`
+e le **regole lessicali** della grammatica da noi utilizzata:
 
-* `cky` which contains the CKY algorithm implementation
-* `translate`which contains the translation implementation
-* `utils` which contains some utils used inside CKY algorithm implementation
+<pre lang=text>
+#############################
+# Lexical Rules
+#############################
+
+NP   -> 'Tu' | 'Noi' | 'Skywalker' | 'anni' | 'età' | 'futuro' | 'ragazzo' | 'amici'
+AUX  -> 'siamo'
+VBN  -> 'illuminati'
+VP   -> 'hai' | 'avrai' | 'corre' | 'apprendere' | 'è'
+DET  -> 'Il'
+ADV  -> 'lì' | 'ancora' | 'velocemente' | 'molto'
+ADP  -> 'di' | 'da'
+ADJ  -> 'novecento' | 'nebuloso' | 'questo'
+</pre>
+
+## Librerie utilizzate
+Come menzionato in precedenza, durante lo sviluppo del progetto abbiamo deciso di utilizzare **nltk** e **numpy** due delle librerie Python più note ed utilizzato nei vari ambienti di sviluppo.
+
+La libreria **nltk** è stata utlizzata per **creare la Grammatica Context-Free** dal file *YodaCFG.cfg* e per fornire la **struttura dati Tree** utilizzata all'interno dell'algoritmo CKY e per **visualizzare** l'output derivante sia dall'operazione di parsing sintattico sia dall'operazione di traduzione.
+
+La libreria **numpy** è stata utilizzata per creare la struttura dati essenziale, rappresentata da una matrice quadrata, utilizzata all'interno dell'algoritmo CKY attraverso l'utilizzo degli array n-dimensionali presenti definiti, all'interno della libreria stessa, come tipo built-in `numpy.ndarray`. **GUARDA QUI**
 
 
-### `cky` module description
-Module which implements the **Cocke–Kasami-Younger parsing algorithm**. 
-Method's *inputs* are:
-* a list of words get by, named `words`  
-* a Context-Free-Grammar, named `grammar`  
+## Moduli python
+Abbiamo deciso di suddividere il progetto in **quattro moduli** che sono rispettivamente:
 
-CKY builds a matrix, named `table` instance of `numpy.ndarray`. Each matrix's element is a potentially empty `list` of `nltk.Tree`. 
+* `main` che rappresenta il modulo principale del progetto
+* `cky` che contiene l'implementazione dell'algoritmo CKY
+* `translate` che contiene l'implementazione del metodo utilizzato per effettuare la traduzione transfer richiesta
+* `utils` che contiene metodi di supporto utilizzati all'interno dei moduli `cky` e `utils`
 
-The implementation determines if exists or not a syntactic tree checking if the matrix's element at position ![equation](https://latex.codecogs.com/gif.latex?%5B0%2C%20n-1%5D) is not empty.
+### Descrizione modulo `main`
+Questo modulo è incaricato di inizializzare rispettivamente:
+  * una variabile contenente la posizione, all'interno del filesystem, del file *YodaCFG.cfg* definita come `grammar_file`
+  * una lista contenente le **frasi** da dover tradurre, definita come `sentences`
 
-If it's not empty then the list may contains one or, in case of grammar ambiguity, more syntactic tree. In both cases, the algorithm returns the first available syntactic tree not considering any type of grammar type.
+Successivamente, il modulo si occupa di leggere il file *YodaCFG.cfg* e di estrarre da esso la grammatica context-free da utilizzare per il progetto. Infine, solamente se la grammatica estratta al passo precedente risulta essere espressa in **Forma Normale di Chomsky**, procediamo a richiamare l'algoritmo di parsing CKY e, solo successivamente, effettuiamo il task di traduzione transfer richiesto; altrimenti, se la grammatica **non** risulta essere in **Forma Normale di Chomsky** allora effettuiamo una `sys.exit` fornendo il seguente messaggio di errore `Grammar is not in Chomsky Normal Form!`.
 
-Otherwise an exception will be thrown.
- 
+Di seguito riportiamo il codice contenuto all'interno del modulo `main`:
+<pre lang=python>
+def main():
+    grammar_folder = Path.cwd() / "Grammar"
+    grammar_file = grammar_folder / "YodaCFG.cfg"
+
+    sentences = ["Tu avrai novecento anni di età",             
+                 "Tu hai amici lì",                             
+                 "Noi siamo illuminati",                        
+                 "Tu hai molto da apprendere ancora",          
+                 "Skywalker corre velocemente",                 
+                 "Il futuro di questo ragazzo è nebuloso"]    
+
+    with open(grammar_file, encoding='utf-8') as file:
+        grammar = CFG.fromstring(file.read())
+    file.close()
+
+    if grammar.is_chomsky_normal_form():
+        for sent in sentences:
+            syntactic_tree = cky(sent.split(), grammar)
+            yoda_translation(syntactic_tree)
+    else:
+        exit('Grammar is not in Chomsky Normal Form!')
+</pre>
+
+### Descrizione modulo `cky`
+Modulo che implementa l'**algoritmo di parsing Cocke–Kasami-Younger**:
+Gli input del metodo sono:
+* una lista di parole, definita come `words`  
+* una Grammatica Context-Free, definita come `grammar`  
+  
+L'algoritmo CKY costruisce una matrice, definita come `table` tipata come `numpy.ndarray`. 
+Ogni elemento di tale matrice è una lista tipata come `list`, potenzialmente vuota, di `nltk.Tree`.
+
+L'implementazione determina se esiste o meno un albero sintattico per la frase da noi considerata andando a verificare che l'elemento della matrice in posizione ![equation](https://latex.codecogs.com/gif.latex?%5B0%2C%20n-1%5D) non sia vuoto. 
+
+Se tale elemento non risulta essere vuoto allora la lista può contenere uno o, in caso di ambiguità grammaticale, più di un albero sintattico. In entrambi i casi, l'algoritmo restituisce il primo albero sintattico disponibile.
+
+In tutti gli altri casi viene generata un'eccezione.
+
+Di seguito riportiamo il codice dell'algoritmo CKY:
+
 <pre lang=python>
 def cky(words: list, grammar: CFG) -> Tree:
     """
@@ -140,16 +208,14 @@ def cky(words: list, grammar: CFG) -> Tree:
 </pre>
 
 
-### `translate` module description
-Module which implements the empirical translation rule mentioned before. 
-Method's *inputs* are:
-* a tree, instance of `nltk.Tree`, named `root`  
-* a list of `Nonterminal` object, named `translation_rules`  
+### Descrizione modulo `translate`
+Modulo che implementa la regola di traduzione menzionata precedentemente.
+Gli input del metodo sono:
+* un albero, instanza di `nltk.Tree`, definito come `root`  
 
-This method seeks, inside the syntactic tree returned by `cky` method, a node whose label (`Nonterminal` object) is contained inside `translation_rules` parameter.
-This node is the the subtree's root ...
+**SCRIVERE COSA FA IL METODO**
 
-If `to_be_moved` variable is not empty then we proceed to move the subtree ...
+Di seguito riportiamo il codice che attua la traduzione di un dato albero sintattico:
 
 <pre lang=python>
 def yoda_translation(root: Tree, translation_rules: list):
@@ -172,16 +238,15 @@ def yoda_translation(root: Tree, translation_rules: list):
     root.draw()
  </pre>
 
-### `utils` module description
-Module which implements some utils for `cky` module.
+### Descrizione modulo `utils`
+Modulo che implementa alcuni metodi di supporto utilizzati all'interno del modulo `cky`.
 
-First method is used to search the *LHS of a lexical rule* given a terminal symbol and a grammar.
+Il primo metodo è utilizzato per ricercare l'*LHS di una regola lessicale* dati un simbolo terminale, corrispondente all'*RHS di una regola lessicale* ed una grammatica.
+I suoi input sono:
+* 
+*   
 
-Its *inputs* are:
-* a tree, instance of `nltk.Tree`, named `word`  
-* a list of `Nonterminal` object, named `grammar`  
-
-Its output is 
+Il suo output è:
 
 <pre lang=python>
 def find_lhs_lexical_rule(word: str, grammar: CFG) -> Nonterminal:
@@ -197,13 +262,13 @@ def find_lhs_lexical_rule(word: str, grammar: CFG) -> Nonterminal:
         return lexical_rules[0].lhs()
 </pre>
 
-Second method is used to search the *LHS of a grammar rule* given the first and the latter half of a grammar rule's RHS and a grammar.
+Il primo metodo è utilizzato per ricercare l'*LHS di una regola grammatcale* dati due simboli non terminali, corrispondenti alla *prima e all'ultima metà dell'RHS di una regola grammaticale*, ed una grammatica.
 
-Its *inputs* are:
-* a tree, instance of `nltk.Tree`, named `first`  
-* a list of `Nonterminal` object, named `second` 
+I suoi input sono;
+* 
+* 
 
-Its output is  
+Il suo output è:
 
 <pre lang=python>
 def find_lhs_grammar_rule(first: Nonterminal, second: Nonterminal, grammar: CFG) -> Nonterminal:
@@ -223,9 +288,9 @@ def find_lhs_grammar_rule(first: Nonterminal, second: Nonterminal, grammar: CFG)
 </pre>
 
 
-# Results
+# Risultati ottenuti
 
-## Exceptions
+## Eccezioni
 
 *"May the Force be with you"*.
 
