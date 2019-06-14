@@ -21,7 +21,8 @@ L'insieme di **frasi**, e le loro **rispettive traduzioni**, da noi scelte sono 
 |        Noi siamo illuminati       |        Illuminati noi siamo       |
 | Tu hai molto da apprendere ancora | Molto da apprendere ancora tu hai |
 |       Skywalker corre veloce      |       Veloce Skywalker corre      |
-|   Skywalker sarà tuo apprendista  |   Tuo apprendista Skywalker sarà  |
+|   Il futuro di questo ragazzo è nebuloso  |   Nebuloso il futuro di questo ragazzo è |
+ 
 
 ## Pattern linguistici di Yoda
 Yoda, Gran Maestro del Consiglio Jedi, è uno dei personaggi più iconici della saga di Star Wars creata da George Lucas.
@@ -39,7 +40,9 @@ ed un esempio utilizzando la stessa frase in lingua inglese ma avente, questa vo
 ## Approcci alla risoluzione del problema
 L'idea di scrivere un modulo di traduzione per le frasi presentate precedentemente è nata dalla ricerca di pattern ricorrenti all'interno delle stesse frasi e delle loro rispettive traduzioni.
 
-In accordo con quanto pensato, l'ordine **XSV** espone una sorta di regola di traduzione empirica. Difatti, per la maggior parte delle frasi da noi analizzate, dobbiamo solamente spostare ciascun complemento all'inizio della frase da dover tradurre per completare, in modo coerente, il task di traduzione.
+In accordo con quanto pensato, l'ordine **XSV** espone una sorta di regola di traduzione empirica. 
+
+Difatti, per la maggior parte delle frasi da noi analizzate, dobbiamo solamente spostare ciascun complemento all'inizio della frase da dover tradurre per completare, in modo coerente, il task di traduzione.
 
 Perciò, l'idea più semplice a cui abbiamo inizialmente pensato è stata quella di creare un **insieme di regole di traduzione** progettato affinché identificasse le parti del discorso opportune da spostare all'interno delle frasi analizzate. 
 
@@ -127,7 +130,7 @@ ADJ  -> 'novecento' | 'nebuloso' | 'questo'
 ## Librerie utilizzate
 Come menzionato in precedenza, durante lo sviluppo del progetto abbiamo deciso di utilizzare **nltk** e **numpy** due delle librerie Python più note ed utilizzato nei vari ambienti di sviluppo.
 
-La libreria **nltk** è stata utlizzata per **creare la Grammatica Context-Free** dal file *YodaCFG.cfg* e per fornire la **struttura dati Tree** utilizzata all'interno dell'algoritmo CKY e per **visualizzare** l'output derivante sia dall'operazione di parsing sintattico sia dall'operazione di traduzione.
+La libreria **nltk** è stata utlizzata per **creare la Grammatica Context-Free** dal file *YodaCFG.cfg, per fornire la **struttura dati Tree** utilizzata all'interno dell'algoritmo CKY e per **visualizzare** l'output derivante sia dall'operazione di parsing sintattico sia dall'operazione di traduzione.
 
 La libreria **numpy** è stata utilizzata per creare la struttura dati essenziale, rappresentata da una matrice, utilizzata all'interno dell'algoritmo CKY attraverso l'utilizzo degli array n-dimensionali definiti, all'interno della libreria stessa, come tipo built-in `numpy.ndarray`. 
 
@@ -144,7 +147,7 @@ Questo modulo è incaricato di inizializzare rispettivamente:
   * una variabile contenente la posizione, all'interno del filesystem, del file *YodaCFG.cfg* definita come `grammar_file`
   * una lista contenente le **frasi** da dover tradurre, definita come `sentences`
 
-Successivamente, il modulo si occupa di leggere il file *YodaCFG.cfg* e di estrarre da esso la grammatica context-free da utilizzare per il progetto. Infine, solamente se la grammatica estratta al passo precedente risulta essere espressa in **Forma Normale di Chomsky**, procediamo a richiamare l'algoritmo di parsing CKY e, solo successivamente, effettuiamo il task di traduzione transfer richiesto; altrimenti, se la grammatica **non** risulta essere in **Forma Normale di Chomsky** allora effettuiamo una `sys.exit` fornendo il seguente messaggio di errore `Grammar is not in Chomsky Normal Form!`.
+Successivamente, il modulo si occupa di leggere il file *YodaCFG.cfg* e di estrarre da esso la grammatica context-free da utilizzare per il progetto. Infine, solamente se la grammatica estratta al passo precedente risulta essere espressa in **Forma Normale di Chomsky**, procediamo a richiamare l'algoritmo di parsing CKY e, solo successivamente, effettuiamo il task di traduzione transfer richiesto. Altrimenti, se la grammatica **non** risulta essere in **Forma Normale di Chomsky** effettuiamo una `sys.exit` fornendo il seguente messaggio di errore: `Grammar is not in Chomsky Normal Form!`.
 
 Di seguito riportiamo il codice contenuto all'interno del modulo `main`:
 
@@ -292,7 +295,7 @@ I suoi input sono:
 * una stringa, rappresentante l'*RHS* di una regola lessicale, definita come `word`
 * una Grammatica Context-Free, definita come `grammar` 
 
-Il metodo, a partire da una lista contenente l'insieme delle regole di produzione, contenute nella grammatica context-free utilizzata, recuperato attraverso l'istruzione `grammar.productions()`, filtra tutte le regole di produzione che possiedono una *RHS* avente un unico simbolo e tali per cui quest'ultimo risulta corrispondere al parametro di input `word`.
+Il metodo, a partire da una lista contenente l'insieme delle regole di produzione contenute nella grammatica context-free utilizzata, recuperato attraverso l'istruzione `grammar.productions()`, filtra tutte le regole di produzione che possiedono una *RHS* avente un unico simbolo e tali per cui quest'ultimo risulta corrispondere al parametro di input `word`.
 
 Fatto ciò, se la lista `lexical_rules` non è vuota allora restituiamo il primo elemento di tale lista che, come già menzionato, corrisponde all'*LHS*, se esiste, della regola lessicale ricercata altrimenti il metodo ritorna `None`.
 
@@ -313,7 +316,7 @@ def find_lhs_lexical_rule(word: str, grammar: CFG) -> Nonterminal:
         return lexical_rules[0].lhs()
 ```
 
-Il secondo metodo è utilizzato, invece, per ricercare l'*LHS di una regola grammatcale* dati due simboli non terminali, corrispondenti alla *prima e all'ultima metà dell'RHS di una regola grammaticale*, ed una grammatica.
+Il secondo metodo è utilizzato, invece, per ricercare l'*LHS di una regola grammaticale* dati due simboli non terminali, corrispondenti alla *prima e all'ultima metà dell'RHS di una regola grammaticale*, ed una grammatica.
 
 I suoi input sono:
 * un primo sottoalbero, istanza di `nltk.Tree`, la cui etichetta della radice rappresenta la prima metà dell'*RHS* di una regola grammaticale, definito come `first`
@@ -346,7 +349,7 @@ def find_lhs_grammar_rule(first: Tree, second: Tree, grammar: CFG) -> Nontermina
 
 Il terzo ed il quarto metodo contenuti all'interno di questo modulo vengono, invece, utilizzati nel modulo `translate`.
 
-Il terzo metodo, definito come `get_parent`, prende in input una tupla contenente l'indice del nodo corrente che stiamo esaminando e restituisce in output, sempre all'interno di una tupla, l'indice corrispondente al padre del nodo corrente esaminato.
+Il terzo metodo, definito come `get_parent`, prende in input una tupla contenente l'indice del nodo corrente che stiamo esaminando e restituisce in output, sempre all'interno di una tupla, l'indice corrispondente al padre del nodo esaminato.
 
 Il quarto metodo, invece, definito come `get_right_child`, prende in input una tupla contenente l'indice del nodo corrente che stiamo esaminando e restituisce in output, sempre all'interno di una tupla, l'indice corrispondente al figlio destro del nodo corrente esaminato.
 
@@ -379,13 +382,7 @@ Di seguito presentiamo sia i risultati ottenuti mediante l'applicazione dell'alg
 
 ![1](https://user-images.githubusercontent.com/37592014/59520022-64aada00-8ec9-11e9-98d8-c3dcbae86726.PNG)
 
-![2](https://user-images.githubusercontent.com/37592014/59520037-6aa0bb00-8ec9-11e9-96c4-0769fc8aff68.PNG)
-
-![3](https://user-images.githubusercontent.com/37592014/59520055-6ffe0580-8ec9-11e9-80d5-f386a627f152.PNG)
-
 ![4](https://user-images.githubusercontent.com/37592014/59520066-75f3e680-8ec9-11e9-8fd1-d3b03cde0f48.PNG)
-
-![5](https://user-images.githubusercontent.com/37592014/59520077-7e4c2180-8ec9-11e9-9cdf-d23e65490266.PNG)
 
 ![6](https://user-images.githubusercontent.com/37592014/59520085-83a96c00-8ec9-11e9-9edb-3e380644439c.PNG)
 
