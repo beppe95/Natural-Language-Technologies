@@ -392,6 +392,8 @@ Nello specifico, la frase originaria in questione era "Skywalker corre veloce".
 
 Come si può notare, la frase non risulta essere corretta poiché l'aggettivo *veloce* dovrebbe essere sostituito con l'avverbio *velocemente*. La frase originaria perciò è stata modificata in "Skywalker corre velocemente".
 
+---
+
 *"May the Force be with you"*.
 
 | Authors | Giacomo Costarelli <br> (<a href="giacomo.costarelli39@gmail.com">giacomo.costarelli39@gmail.com</a>) | Giuseppe Gabbia <br> (<a href="beppegabbia@gmail.com">beppegabbia@gmail.com</a>) |
