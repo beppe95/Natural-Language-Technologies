@@ -184,7 +184,7 @@ L'implementazione determina se esiste o meno un albero sintattico per la frase d
 
 Se tale elemento non risulta essere vuoto allora la lista può contenere uno o, in caso di ambiguità grammaticale, più di un albero sintattico. In entrambi i casi, l'algoritmo restituisce il primo albero sintattico disponibile il quale, ovviamente, dovrà risultare essere corretto (cioè, dovrà contenere, all'interno della radice, il simbolo non terminale corrispondente al simbolo di start relativo alla grammatica da noi scritta).
 
-In tutti gli altri casi effettuiamo una `sys.exit` fornendo il seguente messaggio di errore `Sentence not supported by chosen grammar!`.
+In tutti gli altri casi effettuiamo una `sys.exit` fornendo il seguente messaggio di errore: `Sentence not supported by chosen grammar!`.
 
 Di seguito riportiamo il codice dell'algoritmo CKY:
 
