@@ -4,10 +4,7 @@ from Mazzei.utils import get_parent, get_right_child
 
 def yoda_translation(root: Tree):
     """
-    Provides translation from italian language to Yoda-speak language.
-
-    It filters out from nltk tree's indices of the subtree whose label is contained in 'translation_rules'.
-    Then, it sets the previously obtained subtree as the new left child of a new syntactic tree.
+    Provides translation from italian language to Yoda-speak language using a Transfer approach.
 
     :param root: the syntactic tree to be translated
     """
