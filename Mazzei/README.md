@@ -22,6 +22,9 @@ L'insieme di **frasi**, e le loro **rispettive traduzioni**, da noi scelte sono 
 | Tu hai molto da apprendere ancora | Molto da apprendere ancora tu hai |
 |       Skywalker corre veloce      |       Veloce Skywalker corre      |
 |   Il futuro di questo ragazzo è nebuloso  |   Nebuloso il futuro di questo ragazzo è |
+
+A tale insieme, è stata anche aggiunta volontariamente un'ulteriore frase non supportata dalla grammatica da noi utlizzata. 
+Ciò è stato fatto per verificare, a run-time, di aver effettuato tutti i possibili controlli su eventuali errori dovuti a frasi impossibili da generare rispetto alla grammatica correntemente in uso all'interno del progetto.
  
 
 ## Pattern linguistici di Yoda
@@ -156,12 +159,13 @@ if __name__ == '__main__':
     grammar_folder = Path.cwd() / "Grammar"
     grammar_file = grammar_folder / "YodaCFG.cfg"
 
-    sentences = ["Tu avrai novecento anni di età",             
-                 "Tu hai amici lì",                             
-                 "Noi siamo illuminati",                        
-                 "Tu hai molto da apprendere ancora",           
-                 "Skywalker corre velocemente",                 
-                 "Il futuro di questo ragazzo è nebuloso"]     
+    sentences = ["Tu avrai novecento anni di età",              # Novecento anni di età tu avrai
+                 "Tu hai amici lì",                             # Amici lì tu hai
+                 "Noi siamo illuminati",                        # Illuminati noi siamo
+                 "Tu hai molto da apprendere ancora",           # Molto da apprendere ancora tu hai
+                 "Skywalker corre velocemente",                 # Veloce(mente) Skywalker corre
+                 "Il futuro di questo ragazzo è nebuloso",      # Nebuloso il futuro di questo ragazzo è
+                 "Frase non supportata dalla grammatica"]
 
     with open(grammar_file, encoding='utf-8') as file:
         grammar = CFG.fromstring(file.read())
@@ -185,7 +189,9 @@ Ogni elemento di tale matrice è una lista tipata come `list`, potenzialmente vu
 
 L'implementazione determina se esiste o meno un albero sintattico per la frase da noi considerata andando a verificare che l'elemento della matrice in posizione ![equation](https://latex.codecogs.com/gif.latex?%5B0%2C%20n-1%5D) non sia vuoto. 
 
-Se tale elemento non risulta essere vuoto allora la lista può contenere uno o, in caso di ambiguità grammaticale, più di un albero sintattico. In entrambi i casi, l'algoritmo restituisce il primo albero sintattico disponibile il quale, ovviamente, dovrà risultare essere corretto (cioè, dovrà contenere, all'interno della radice, il simbolo non terminale corrispondente al simbolo di start relativo alla grammatica da noi scritta).
+Se tale elemento non risulta essere vuoto allora la lista può contenere uno o, in caso di ambiguità grammaticale, più di un albero sintattico. In entrambi i casi, l'algoritmo restituisce il primo albero sintattico disponibile il quale, ovviamente, dovrà risultare essere corretto (cioè, dovrà contenere, all'interno della radice, il simbolo non terminale corrispondente al simbolo di start relativo alla grammatica da noi scritta). 
+
+Quest'ultimo passaggio viene effettuato utilizzando il metodo `get_syntactic_tree`, 
 
 In tutti gli altri casi effettuiamo una `sys.exit` fornendo il seguente messaggio di errore: `Sentence not supported by chosen grammar!`.
 
@@ -195,15 +201,12 @@ Di seguito riportiamo il codice dell'algoritmo CKY:
 def cky(words: list, grammar: CFG) -> Tree:
     """
     The Cocke Kasami Younger Algorithm (CKY) is an efficient parsing algorithm for Context-Free grammars.
-
     The structure of the rules must be in Chomsky Normal Form. CNF rules' right hand side can contain:
         1 - at most 2 symbols;
         2 - a terminal;
         3 - a null string identified by ε
-
     Given a sentence, the algorithm builds up, via dynamic programming, a syntactic tree consistent with the CFG input
     grammar.
-
     :param words: sentence split into words
     :param grammar: CFG grammar
     :return: syntactic tree, instance of nltk Tree.
@@ -213,7 +216,10 @@ def cky(words: list, grammar: CFG) -> Tree:
 
     for j in range(1, table_dimension):
         table[j - 1, j] = list()
-        table[j - 1, j].append(Tree(find_lhs_lexical_rule(words[j - 1], grammar), [words[j - 1]]))
+
+        lexical_lhs = find_lhs_lexical_rule(words[j - 1], grammar)
+        if lexical_lhs is not None:
+            table[j - 1, j].append(Tree(lexical_lhs, [words[j - 1]]))
 
         for i in reversed(range(0, j - 1)):
             table[i, j] = list()
@@ -221,13 +227,15 @@ def cky(words: list, grammar: CFG) -> Tree:
                 if table[i, k] is not None and len(table[i, k]) != 0 \
                         and table[k, j] is not None and len(table[k, j]) != 0:
 
-                    current_lhs = find_lhs_grammar_rule(table[i, k][0], table[k, j][0], grammar)
-                    if current_lhs is not None:
-                        table[i, j].append(Tree(current_lhs, [table[i, k][0], table[k, j][0]]))
+                    for non_terminal_1 in table[i, k]:
+                        for non_terminal_2 in table[k, j]:
 
-    if len(table[0, table_dimension - 1]) != 0 and table[0, table_dimension - 1][0].label() == Nonterminal("S"):
-        table[0, table_dimension - 1][0].draw()
-        return table[0, table_dimension - 1][0]
+                            current_lhs = find_lhs_grammar_rule(non_terminal_1, non_terminal_2, grammar)
+                            if current_lhs is not None:
+                                table[i, j].append(Tree(current_lhs, [non_terminal_1, non_terminal_2]))
+
+    if len(table[0, table_dimension - 1]) != 0:
+        return get_syntactic_tree(table[0, table_dimension - 1])
     else:
         exit('Sentence not supported by chosen grammar!')
 ```
@@ -285,7 +293,7 @@ def yoda_translation(root: Tree):
 ```
 
 ### Descrizione modulo `utils`
-Modulo che implementa alcuni metodi di supporto utilizzati all'interno del modulo `cky`.
+Modulo che implementa alcuni metodi di supporto utilizzati all'interno del modulo `cky` e del modulo `translate`.
 
 Il primo metodo è utilizzato per ricercare l'*LHS di una regola lessicale* dati un simbolo terminale, corrispondente all'*RHS di una regola lessicale* ed una grammatica.
 I suoi input sono:
@@ -344,11 +352,33 @@ def find_lhs_grammar_rule(first: Tree, second: Tree, grammar: CFG) -> Nontermina
         return grammar_rules[0].lhs()
 ```
 
-Il terzo ed il quarto metodo contenuti all'interno di questo modulo vengono, invece, utilizzati nel modulo `translate`.
+Il terzo metodo, definito come `get_syntactic_tree`, prende in input una lista contenente le radici di tutti gli alberi sintattici prodotti tramite l'esecuzione dell'algoritmo di parsing CKY e restituisce in output il primo elemento di tale lista, istanza di `nltk.Tree`, la cui etichetta risulta essere equivalente al simbolo non terminale `S` che rappresenta il simbolo di start della grammatica utilizzata.
+Nel caso in cui nessuno degli alberi contenuti all'interno di `tree_list` rispetti il vincolo sopra imposto viene effettuata una `exit` fornendo il seguente messaggio di errore: `No tree founded inside CKY table!`.
 
-Il terzo metodo, definito come `get_parent`, prende in input una tupla contenente l'indice del nodo corrente che stiamo esaminando e restituisce in output, sempre all'interno di una tupla, l'indice corrispondente al padre del nodo esaminato.
+Riportiamo di seguito il codice di quest'ultimo metodo:
 
-Il quarto metodo, invece, definito come `get_right_child`, prende in input una tupla contenente l'indice del nodo corrente che stiamo esaminando e restituisce in output, sempre all'interno di una tupla, l'indice corrispondente al figlio destro del nodo corrente esaminato.
+```python
+def get_syntactic_tree(tree_list: list) -> Tree:
+    """
+    Looks for the first tree, contained into tree_list param, whose label is equal to the non-terminal symbol 'S'
+    which is the start symbol of the CFG grammar.
+    If no tree is founded, exit we'll be called up with 'No tree founded inside CKY table!'.
+    :param tree_list: list containing the syntactic trees built-up with CKY algorithm.
+    :return: first tree whose label is equal to the non-terminal symbol 'S'
+    """
+    for current_tree in tree_list:
+        if current_tree.label() == Nonterminal('S'):
+            current_tree.draw()
+            return current_tree
+
+    exit('No tree founded inside CKY table!')
+```
+
+Il quarto ed il quinto metodo contenuti all'interno di questo modulo vengono, invece, utilizzati nel modulo `translate`.
+
+Il quarto metodo, definito come `get_parent`, prende in input una tupla contenente l'indice del nodo corrente che stiamo esaminando e restituisce in output, sempre all'interno di una tupla, l'indice corrispondente al padre del nodo esaminato.
+
+Il quinto metodo, invece, definito come `get_right_child`, prende in input una tupla contenente l'indice del nodo corrente che stiamo esaminando e restituisce in output, sempre all'interno di una tupla, l'indice corrispondente al figlio destro del nodo corrente esaminato.
 
 Riportiamo di seguito i codici di questi ultimi metodi descritti:
 
