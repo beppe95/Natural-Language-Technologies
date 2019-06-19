@@ -50,3 +50,21 @@ def get_right_child(index: tuple) -> tuple:
     :return: index of the right child node
     """
     return index + (1, )
+
+
+def get_syntactic_tree(tree_list: list) -> Tree:
+    """
+    Looks for the first tree, contained into tree_list param, whose label is equal to the non-terminal symbol 'S'
+    which is the start symbol of the CFG grammar.
+
+    If no tree is founded, exit we'll be called up with 'No tree founded inside CKY table!'.
+
+    :param tree_list: list containing the syntactic trees built-up with CKY algorithm.
+    :return: first tree whose label is equal to the non-terminal symbol 'S'
+    """
+    for current_tree in tree_list:
+        if current_tree.label() == Nonterminal('S'):
+            current_tree.draw()
+            return current_tree
+
+    exit('No tree founded inside CKY table!')

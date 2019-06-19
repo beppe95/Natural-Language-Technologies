@@ -14,7 +14,8 @@ if __name__ == '__main__':
                  "Noi siamo illuminati",                        # Illuminati noi siamo
                  "Tu hai molto da apprendere ancora",           # Molto da apprendere ancora tu hai
                  "Skywalker corre velocemente",                 # Veloce(mente) Skywalker corre
-                 "Il futuro di questo ragazzo è nebuloso"]      # Nebuloso il futuro di questo ragazzo è
+                 "Il futuro di questo ragazzo è nebuloso",      # Nebuloso il futuro di questo ragazzo è
+                 "Frase non supportata dalla grammatica"]
 
     with open(grammar_file, encoding='utf-8') as file:
         grammar = CFG.fromstring(file.read())

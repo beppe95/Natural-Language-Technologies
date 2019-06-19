@@ -1,7 +1,7 @@
 from sys import exit
 from numpy import ndarray
-from nltk import CFG, Tree, Nonterminal
-from Mazzei.utils import find_lhs_lexical_rule, find_lhs_grammar_rule
+from nltk import CFG, Tree
+from Mazzei.utils import find_lhs_lexical_rule, find_lhs_grammar_rule, get_syntactic_tree
 
 
 def cky(words: list, grammar: CFG) -> Tree:
@@ -25,7 +25,10 @@ def cky(words: list, grammar: CFG) -> Tree:
 
     for j in range(1, table_dimension):
         table[j - 1, j] = list()
-        table[j - 1, j].append(Tree(find_lhs_lexical_rule(words[j - 1], grammar), [words[j - 1]]))
+
+        lexical_lhs = find_lhs_lexical_rule(words[j - 1], grammar)
+        if lexical_lhs is not None:
+            table[j - 1, j].append(Tree(lexical_lhs, [words[j - 1]]))
 
         for i in reversed(range(0, j - 1)):
             table[i, j] = list()
@@ -33,13 +36,16 @@ def cky(words: list, grammar: CFG) -> Tree:
                 if table[i, k] is not None and len(table[i, k]) != 0 \
                         and table[k, j] is not None and len(table[k, j]) != 0:
 
-                    current_lhs = find_lhs_grammar_rule(table[i, k][0], table[k, j][0], grammar)
-                    if current_lhs is not None:
-                        table[i, j].append(Tree(current_lhs, [table[i, k][0], table[k, j][0]]))
+                    for non_terminal_1 in table[i, k]:
+                        for non_terminal_2 in table[k, j]:
 
-    if len(table[0, table_dimension - 1]) != 0 and table[0, table_dimension - 1][0].label() == Nonterminal("S"):
-        table[0, table_dimension - 1][0].draw()
-        return table[0, table_dimension - 1][0]
+                            current_lhs = find_lhs_grammar_rule(non_terminal_1, non_terminal_2, grammar)
+                            if current_lhs is not None:
+                                table[i, j].append(Tree(current_lhs, [non_terminal_1, non_terminal_2]))
+
+    if len(table[0, table_dimension - 1]) != 0:
+        return get_syntactic_tree(table[0, table_dimension - 1])
     else:
         exit('Sentence not supported by chosen grammar!')
+
 
