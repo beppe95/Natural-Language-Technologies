@@ -59,7 +59,9 @@ Ovviamente, tale assunzione non mina la generalità dell'algoritmo in quanto qua
 
 Per rappresentare la struttura dei possibili alberi sintattici, i quali vengono costruiti durante l'esecuzione stessa dell'algoritmo, ci serviamo di una matrice. Nello specifico, andremo ad utilizzare la **matrice triangolare superiore** di una matrice quadrata avente dimensione ![equation](http://latex.codecogs.com/gif.latex?%5Bn&plus;1%5D*%5Bn&plus;1%5D). 
 
-![cky](https://user-images.githubusercontent.com/37592014/59519117-768b7d80-8ec7-11e9-8fdb-f45ae3367850.PNG)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37592014/59519117-768b7d80-8ec7-11e9-8fdb-f45ae3367850.PNG"/>
+</p>
 
 Ogni **elemento** di tale matrice in **posizione ![equation](http://latex.codecogs.com/gif.latex?%5Bi%2Cj%5D)** conterrà l'insieme di simboli non terminali che rappresentano tutti i costituenti che spaziano dalla posizione *i* alla posizione *j* all'interno della frase di input da noi analizzata.
 
@@ -407,11 +409,17 @@ def get_right_child(index: tuple) -> tuple:
 # Risultati ottenuti
 Di seguito presentiamo sia i risultati ottenuti mediante l'applicazione dell'algoritmo CKY all'insieme di frasi da noi scelto sia i risultati ottenuti tramite l'applicazione del modulo di traduzione transfer richiesto:
 
-![1](https://user-images.githubusercontent.com/37592014/59520022-64aada00-8ec9-11e9-98d8-c3dcbae86726.PNG)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37592014/59520022-64aada00-8ec9-11e9-98d8-c3dcbae86726.PNG"/>
+</p>
 
-![4](https://user-images.githubusercontent.com/37592014/59520066-75f3e680-8ec9-11e9-8fd1-d3b03cde0f48.PNG)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37592014/59520066-75f3e680-8ec9-11e9-8fd1-d3b03cde0f48.PNG"/>
+</p>
 
-![6](https://user-images.githubusercontent.com/37592014/59520085-83a96c00-8ec9-11e9-9edb-3e380644439c.PNG)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/37592014/59520085-83a96c00-8ec9-11e9-9edb-3e380644439c.PNG"/>
+</p>
 
 ## Eccezioni
 L'unica eccezione da segnalare riguarda la modifica di una frase da noi scelta.
